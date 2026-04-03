@@ -95,9 +95,10 @@ const SpinPage = () => {
 
             <div className="space-y-2.5 font-mono text-[12px]">
               {[
-                ['Batch ID', 'LND-2026-0403-001'],
-                ['Date', 'April 3, 2026'],
-                ['Sender Wallet', 'crossmint:company-wallet'],
+                ['Batch ID', `LND-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-001`],
+                ['Date', new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
+                ['Sender Wallet', 'crossmint:company-hq-wallet'],
+                ['Recipients', `${routes.length} vendor wallets`],
                 ['Total', `$${totalLaundryCost.toLocaleString()} (via USDC routing)`],
               ].map(([label, val]) => (
                 <div key={label} className="flex justify-between">
@@ -171,6 +172,11 @@ const SpinPage = () => {
                     {compliance && !complianceLoading && compliance.risk_level !== 'low' && (
                       <p className={`font-mono text-[10px] mb-1.5 ${riskColor[compliance.risk_level]}`}>
                         {compliance.reason}
+                      </p>
+                    )}
+                    {inv && (
+                      <p className="text-[10px] text-muted-foreground/60 font-mono mb-1.5">
+                        → crossmint:{inv.walletSlug}
                       </p>
                     )}
                     {inv && (

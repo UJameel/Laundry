@@ -24,6 +24,8 @@ const fxSpreadMap: Record<string, { spread: number; fee: number }> = {
   'NGN': { spread: 0.06, fee: 75 },
   'GBP': { spread: 0.02, fee: 25 },
   'JPY': { spread: 0.03, fee: 30 },
+  'TRY': { spread: 0.06, fee: 60 },
+  'USD': { spread: 0.01, fee: 60 },
 };
 
 const WashCyclePage = () => {

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, AlertCircle, ArrowRightLeft } from 'lucide-react';
+import { ArrowRight, AlertCircle, ArrowRightLeft, AlertTriangle, ShieldAlert } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import DrumPorthole from '@/components/drum/DrumPorthole';
 import DashboardStats from '@/components/dashboard/DashboardStats';
@@ -140,10 +140,22 @@ const LoadPage = () => {
                     </button>
                   </td>
                   <td className="px-5 py-3.5 text-center">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-destructive/10 text-destructive text-[10px] font-semibold uppercase tracking-wider">
-                      <AlertCircle className="w-3 h-3" />
-                      Dirty
-                    </span>
+                    {inv.riskFlag === 'red' ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-red-500/15 text-red-400 text-[10px] font-semibold uppercase tracking-wider border border-red-500/20">
+                        <ShieldAlert className="w-3 h-3" />
+                        High Risk
+                      </span>
+                    ) : inv.riskFlag === 'yellow' ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-400 text-[10px] font-semibold uppercase tracking-wider border border-yellow-500/20">
+                        <AlertTriangle className="w-3 h-3" />
+                        Caution
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-destructive/10 text-destructive text-[10px] font-semibold uppercase tracking-wider">
+                        <AlertCircle className="w-3 h-3" />
+                        Dirty
+                      </span>
+                    )}
                   </td>
                 </motion.tr>
                 {expandedRow === inv.id && (

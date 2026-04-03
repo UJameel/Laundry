@@ -72,6 +72,24 @@ export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
     countryName: 'Japan',
     balance: 850_000,
   },
+  TR: {
+    id: 'crossmint:vendor-wallet-tr',
+    label: 'Nexus Trade Istanbul',
+    address: '0xff6677889900112233445566ff00112233445566',
+    currency: 'TRY',
+    countryCode: 'TR',
+    countryName: 'Turkey',
+    balance: 625_000,
+  },
+  VG: {
+    id: 'crossmint:vendor-wallet-vg',
+    label: 'Offshore Holdings BVI',
+    address: '0x00778899001122334455667700112233445566778',
+    currency: 'USD',
+    countryCode: 'VG',
+    countryName: 'British Virgin Islands',
+    balance: 250_000,
+  },
 };
 
 // FX rates matching invoices.ts
@@ -81,6 +99,8 @@ const FX_RATES: Record<string, number> = {
   NGN: 1520.00,
   GBP: 0.7892,
   JPY: 151.25,
+  TRY: 32.10,
+  USD: 1.00,
   USDC: 1,
 };
 
@@ -155,6 +175,8 @@ export function mockExecuteTransfers(routes: RouteResult[]): MockTransferResult 
       Nigeria: 'NG',
       'United Kingdom': 'GB',
       Japan: 'JP',
+      Turkey: 'TR',
+      'British Virgin Islands': 'VG',
     };
     const countryCode = currencyMap[route.country] ?? countryCodeFromRoute(route);
     const recipient = RECIPIENT_WALLETS[countryCode] ?? RECIPIENT_WALLETS['DE'];
