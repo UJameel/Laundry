@@ -1,5 +1,10 @@
+import { mockExecuteTransfers } from '@/lib/mockWallets';
+
 const N8N_BASE = 'https://usmanjameel.app.n8n.cloud/webhook';
 const MINIMAX_HOST = import.meta.env.VITE_MINIMAX_API_HOST ?? 'https://api.minimax.chat';
+// Set VITE_USE_MOCK_TRANSFERS=true in .env to use fake wallets instead of Crossmint.
+// Flip to false (or remove) once the real Crossmint integration is live.
+const USE_MOCK_TRANSFERS = import.meta.env.VITE_USE_MOCK_TRANSFERS === 'true';
 
 export interface AnalyzeRequest {
   invoices: {
@@ -62,6 +67,11 @@ export async function analyzeInvoices(req: AnalyzeRequest): Promise<AnalyzeRespo
 }
 
 export async function executeTransfers(routes: RouteResult[]): Promise<ExecuteResponse> {
+  if (USE_MOCK_TRANSFERS) {
+    // Simulate network latency so the animation plays out naturally
+    await new Promise((r) => setTimeout(r, 2800));
+    return { success: true, transfer: mockExecuteTransfers(routes) as unknown as Record<string, unknown> };
+  }
   const res = await fetch(`${N8N_BASE}/laundry-execute`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

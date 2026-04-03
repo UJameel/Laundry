@@ -8,6 +8,7 @@ import WaterTransition from '@/components/transitions/WaterTransition';
 import { useWaterTransition } from '@/hooks/useWaterTransition';
 import { useLaundryStore } from '@/hooks/useLaundryStore';
 import { executeTransfers } from '@/lib/api';
+import type { MockTransferResult } from '@/lib/mockWallets';
 
 const subSteps = [
   'Converting to USDC',
@@ -18,7 +19,7 @@ const subSteps = [
 
 const RinsePage = () => {
   const { isTransitioning, navigateWithWater, handleTransitionComplete } = useWaterTransition();
-  const { analysisResult, setTransferResult } = useLaundryStore();
+  const { analysisResult, setTransferResult, transferResult } = useLaundryStore();
   const [executing, setExecuting] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
   const [showChase, setShowChase] = useState(false);
@@ -109,39 +110,82 @@ const RinsePage = () => {
             >
               <DrumPorthole size={180} state="complete" className="mb-8" />
 
-              <div className="bg-card border border-border rounded-xl p-8 w-full font-mono text-[12px]">
-                <div className="flex items-center gap-2 mb-4">
-                  <CheckCircle2 className="w-5 h-5 text-success" />
-                  <h2 className="text-base font-bold text-foreground font-display">Wash Complete</h2>
-                </div>
-                <div className="h-px bg-border mb-4" />
-                <div className="space-y-2.5">
-                  {[
-                    ['Transaction Hash', '0x4a3f…bc92'],
-                    ['Network', 'Base (Testnet)'],
-                    ['Sender', 'crossmint:company-wallet'],
-                    ['Recipient', 'crossmint:contractor-wallet'],
-                    ['Amount', `$${totalLaundryCost.toLocaleString()} USDC`],
-                    ['Status', 'CONFIRMED'],
-                  ].map(([label, val]) => (
-                    <div key={label} className="flex justify-between">
-                      <span className="text-muted-foreground">{label}</span>
-                      <span className={`text-foreground ${label === 'Status' ? 'text-success font-semibold' : ''}`}>{val}</span>
+              {(() => {
+                const mockResult = transferResult as unknown as MockTransferResult | null;
+                const transfers = mockResult?.transfers ?? [];
+                const remainingBalance = mockResult?.remaining_sender_balance;
+
+                return (
+                  <div className="bg-card border border-border rounded-xl p-8 w-full font-mono text-[12px]">
+                    <div className="flex items-center gap-2 mb-4">
+                      <CheckCircle2 className="w-5 h-5 text-success" />
+                      <h2 className="text-base font-bold text-foreground font-display">Wash Complete</h2>
                     </div>
-                  ))}
-                </div>
-                <div className="h-px bg-border my-4" />
-                <div className="space-y-1.5">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Fees paid</span>
-                    <span className="text-foreground tabular-nums">${totalLaundryCost.toLocaleString()}</span>
+                    <div className="h-px bg-border mb-4" />
+
+                    {/* Batch summary */}
+                    <div className="space-y-2.5 mb-4">
+                      {[
+                        ['Network', 'Base (Testnet)'],
+                        ['Sender', 'crossmint:company-hq-wallet'],
+                        ['Transfers', `${transfers.length || analysisResult?.routes?.length || 5} payments`],
+                        ['Total USDC sent', `$${totalLaundryCost.toLocaleString()} USDC`],
+                        ...(remainingBalance != null ? [['Sender balance after', `$${remainingBalance.toLocaleString()} USDC`]] : []),
+                      ].map(([label, val]) => (
+                        <div key={label} className="flex justify-between">
+                          <span className="text-muted-foreground">{label}</span>
+                          <span className="text-foreground tabular-nums">{val}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Per-transfer receipts */}
+                    {transfers.length > 0 && (
+                      <>
+                        <div className="h-px bg-border mb-3" />
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2">Transfer receipts</p>
+                        <div className="space-y-3">
+                          {transfers.map((tx) => (
+                            <div key={tx.tx_hash} className="rounded-lg border border-border/60 px-3 py-2.5 space-y-1.5">
+                              <div className="flex justify-between items-center">
+                                <span className="text-foreground font-medium">{tx.vendor}</span>
+                                <span className="text-success font-semibold">CONFIRMED</span>
+                              </div>
+                              <div className="flex justify-between text-muted-foreground">
+                                <span>To</span>
+                                <span className="text-foreground truncate max-w-[180px]">{tx.to_wallet}</span>
+                              </div>
+                              <div className="flex justify-between text-muted-foreground">
+                                <span>Amount</span>
+                                <span className="text-foreground tabular-nums">
+                                  ${tx.amount_usdc.toLocaleString()} USDC → {tx.amount_local.toLocaleString()} {tx.currency}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-muted-foreground">
+                                <span>Tx hash</span>
+                                <span className="text-foreground/60">{tx.tx_hash.slice(0, 10)}…{tx.tx_hash.slice(-6)}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    <div className="h-px bg-border my-4" />
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Fees paid</span>
+                        <span className="text-foreground tabular-nums">${totalLaundryCost.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Fees avoided</span>
+                        <span className="text-success font-bold tabular-nums">${totalSavings.toLocaleString()}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Fees avoided</span>
-                    <span className="text-success font-bold tabular-nums">${totalSavings.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
+                );
+              })()}
+
 
               <motion.button
                 onClick={() => navigateWithWater('/briefing')}
