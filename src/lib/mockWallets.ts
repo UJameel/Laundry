@@ -12,6 +12,7 @@ export interface MockWallet {
   address: string;     // on-chain address (Base)
   currency: string;    // local fiat currency held
   countryCode: string;
+  countryName: string;
   balance: number;     // in local currency units
 }
 
@@ -21,7 +22,8 @@ export const SENDER_WALLET: MockWallet = {
   address: '0x1a2b3c4d5e6f7890abcdef1234567890abcdef12',
   currency: 'USDC',
   countryCode: 'US',
-  balance: 500_000, // $500k USDC starting balance
+  countryName: 'United States',
+  balance: 500_000,
 };
 
 export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
@@ -31,7 +33,8 @@ export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
     address: '0xaa1122334455667788990011aabbccddeeff0011',
     currency: 'ARS',
     countryCode: 'AR',
-    balance: 1_200_000, // existing ARS balance
+    countryName: 'Argentina',
+    balance: 1_200_000,
   },
   DE: {
     id: 'crossmint:vendor-wallet-de',
@@ -39,6 +42,7 @@ export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
     address: '0xbb2233445566778899001122bbccddeeff001122',
     currency: 'EUR',
     countryCode: 'DE',
+    countryName: 'Germany',
     balance: 18_500,
   },
   NG: {
@@ -47,6 +51,7 @@ export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
     address: '0xcc3344556677889900112233ccddeeff00112233',
     currency: 'NGN',
     countryCode: 'NG',
+    countryName: 'Nigeria',
     balance: 4_500_000,
   },
   GB: {
@@ -55,6 +60,7 @@ export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
     address: '0xdd4455667788990011223344ddeeff0011223344',
     currency: 'GBP',
     countryCode: 'GB',
+    countryName: 'United Kingdom',
     balance: 12_000,
   },
   JP: {
@@ -63,6 +69,7 @@ export const RECIPIENT_WALLETS: Record<string, MockWallet> = {
     address: '0xee5566778899001122334455eeff001122334455',
     currency: 'JPY',
     countryCode: 'JP',
+    countryName: 'Japan',
     balance: 850_000,
   },
 };

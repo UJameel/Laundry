@@ -19,8 +19,8 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const defaultWallets: WalletEntry[] = [
-  { ...SENDER_WALLET, role: 'sender', isDemo: true },
-  ...Object.values(RECIPIENT_WALLETS).map((w) => ({ ...w, role: 'recipient' as const, isDemo: true })),
+  { ...SENDER_WALLET, countryName: SENDER_WALLET.countryName, role: 'sender', isDemo: true },
+  ...Object.values(RECIPIENT_WALLETS).map((w) => ({ ...w, countryName: w.countryName, role: 'recipient' as const, isDemo: true })),
 ];
 
 const App = () => {

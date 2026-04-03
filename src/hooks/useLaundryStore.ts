@@ -7,9 +7,12 @@ export interface WalletEntry {
   address: string;
   currency: string;
   countryCode: string;
+  countryName: string;
   balance: number;
   role: 'sender' | 'recipient';
   isDemo: boolean;
+  complianceRisk?: 'low' | 'medium' | 'high' | 'blocked';
+  complianceReason?: string;
 }
 
 export interface LaundryState {
