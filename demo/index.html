@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>USD → USDC → JPY Transfer Demo</title>
+<title>Money Laundry</title>
 <style>
   :root {
     --bg: #0a0e1a;
@@ -257,6 +257,227 @@
     font-size: 20px;
   }
 
+  /* Laundry Machine Animation */
+  .laundry-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 14, 26, 0.92);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .laundry-overlay.active { display: flex; }
+
+  .laundry-scene {
+    position: relative;
+    width: 260px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .laundry-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 16px;
+    text-align: center;
+    min-height: 48px;
+  }
+  .laundry-label .sub { font-size: 12px; color: var(--muted); display: block; margin-top: 4px; }
+
+  /* The machine body */
+  .machine {
+    width: 200px;
+    height: 240px;
+    background: linear-gradient(180deg, #2a3456 0%, #1e2844 100%);
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+
+  /* Top panel with controls */
+  .machine-top {
+    height: 50px;
+    background: #232d4a;
+    border-radius: 18px 18px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .machine-knob {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--accent-light);
+    box-shadow: 0 0 8px rgba(108, 92, 231, 0.5);
+  }
+
+  .machine-leds {
+    display: flex; gap: 6px;
+  }
+  .machine-led {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    animation: ledBlink 1.2s infinite alternate;
+  }
+  .machine-led:nth-child(2) { animation-delay: 0.4s; background: var(--accent-light); }
+  .machine-led:nth-child(3) { animation-delay: 0.8s; }
+  @keyframes ledBlink { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+
+  /* Drum window */
+  .machine-drum-wrapper {
+    position: absolute;
+    top: 70px; left: 50%; transform: translateX(-50%);
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: #0a0e1a;
+    border: 3px solid #3a4570;
+    overflow: hidden;
+  }
+
+  .machine-drum {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    position: relative;
+    animation: drumSpin 2s linear infinite;
+  }
+
+  @keyframes drumSpin { to { transform: rotate(360deg); } }
+
+  /* Money bills tumbling inside */
+  .drum-item {
+    position: absolute;
+    font-size: 22px;
+    font-weight: 700;
+    animation: tumble 2s linear infinite;
+  }
+  .drum-item:nth-child(1) { top: 20%; left: 25%; animation-delay: 0s; }
+  .drum-item:nth-child(2) { top: 55%; left: 55%; animation-delay: 0.5s; }
+  .drum-item:nth-child(3) { top: 35%; left: 65%; animation-delay: 1s; }
+  .drum-item:nth-child(4) { top: 65%; left: 20%; animation-delay: 1.5s; }
+
+  @keyframes tumble {
+    0%   { transform: rotate(0deg) scale(1); opacity: 0.9; }
+    25%  { transform: rotate(90deg) scale(0.8); opacity: 1; }
+    50%  { transform: rotate(180deg) scale(1); opacity: 0.7; }
+    75%  { transform: rotate(270deg) scale(0.9); opacity: 1; }
+    100% { transform: rotate(360deg) scale(1); opacity: 0.9; }
+  }
+
+  /* Water/suds effect */
+  .drum-water {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(108,92,231,0.1) 0%, rgba(108,92,231,0.3) 100%);
+    border-radius: 0 0 50% 50%;
+    animation: slosh 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes slosh {
+    0%   { transform: translateX(-5px) skewX(-2deg); height: 45%; }
+    100% { transform: translateX(5px) skewX(2deg); height: 55%; }
+  }
+
+  .drum-bubbles {
+    position: absolute;
+    width: 100%; height: 100%;
+  }
+  .bubble {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(162, 155, 254, 0.4);
+    border: 1px solid rgba(162, 155, 254, 0.6);
+    animation: bubbleUp 2s ease-in infinite;
+  }
+  .bubble:nth-child(1) { left: 20%; bottom: 30%; animation-delay: 0s; }
+  .bubble:nth-child(2) { left: 50%; bottom: 25%; animation-delay: 0.7s; width: 6px; height: 6px; }
+  .bubble:nth-child(3) { left: 70%; bottom: 35%; animation-delay: 1.3s; width: 10px; height: 10px; }
+  .bubble:nth-child(4) { left: 35%; bottom: 20%; animation-delay: 0.4s; width: 5px; height: 5px; }
+
+  @keyframes bubbleUp {
+    0%   { transform: translateY(0) scale(1); opacity: 0.8; }
+    100% { transform: translateY(-50px) scale(0.3); opacity: 0; }
+  }
+
+  /* Machine feet */
+  .machine-feet {
+    display: flex; justify-content: space-between;
+    padding: 0 30px;
+    position: absolute; bottom: -8px; left: 0; right: 0;
+  }
+  .machine-foot {
+    width: 24px; height: 8px;
+    background: #3a4570;
+    border-radius: 0 0 6px 6px;
+  }
+
+  /* Machine vibration when running */
+  .machine.running {
+    animation: vibrate 0.15s linear infinite;
+  }
+  @keyframes vibrate {
+    0%   { transform: translateX(0) translateY(0); }
+    25%  { transform: translateX(1px) translateY(-1px); }
+    50%  { transform: translateX(-1px) translateY(1px); }
+    75%  { transform: translateX(1px) translateY(0); }
+    100% { transform: translateX(0) translateY(-1px); }
+  }
+
+  /* Input/Output chute arrows */
+  .laundry-input, .laundry-output {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 16px;
+    color: var(--muted);
+  }
+  .laundry-input .currency-in {
+    color: var(--accent-light);
+    font-size: 20px;
+    animation: feedIn 1s ease-in-out infinite;
+  }
+  .laundry-output .currency-out {
+    color: var(--green);
+    font-size: 20px;
+    animation: popOut 1s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+  @keyframes feedIn {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-6px); opacity: 0.6; }
+  }
+  @keyframes popOut {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(6px); opacity: 0.6; }
+  }
+
+  .laundry-progress {
+    width: 200px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .laundry-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
   /* Bank form */
   .form-group {
     margin-bottom: 16px;
@@ -461,14 +682,264 @@
 
   .rate-bar span { display: flex; align-items: center; gap: 4px; }
   .rate-green { color: var(--green); }
+
+  /* ========== Police Chase Animation ========== */
+  .chase-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 14, 26, 0.95);
+    z-index: 2000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .chase-overlay.active { display: flex; }
+
+  .chase-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+    z-index: 2;
+    animation: chaseFlash 0.5s infinite alternate;
+  }
+  @keyframes chaseFlash {
+    0%   { color: #ff7675; }
+    100% { color: #fdcb6e; }
+  }
+
+  .chase-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    z-index: 2;
+  }
+
+  /* The road / ground */
+  .chase-scene {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  /* Scrolling road */
+  .chase-road {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    background: #1a1a2e;
+    border-top: 3px solid #444;
+  }
+  .chase-road::before {
+    content: '';
+    position: absolute;
+    top: 37px;
+    left: 0;
+    width: 200%;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, #fdcb6e 0px, #fdcb6e 30px, transparent 30px, transparent 60px);
+    animation: roadScroll 0.8s linear infinite;
+  }
+  @keyframes roadScroll {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Scrolling city skyline */
+  .chase-skyline {
+    position: absolute;
+    bottom: 80px;
+    width: 200%;
+    height: 60px;
+    animation: skylineScroll 6s linear infinite;
+  }
+  @keyframes skylineScroll {
+    to { transform: translateX(-50%); }
+  }
+  .skyline-building {
+    position: absolute;
+    bottom: 0;
+    background: #16213e;
+    border: 1px solid #1e2a45;
+  }
+
+  /* The running guy with cash */
+  .chase-runner {
+    position: absolute;
+    bottom: 75px;
+    left: 30%;
+    font-size: 48px;
+    animation: runnerBounce 0.35s ease-in-out infinite alternate;
+    z-index: 10;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  }
+  @keyframes runnerBounce {
+    0%   { transform: translateY(0) rotate(-2deg); }
+    100% { transform: translateY(-12px) rotate(2deg); }
+  }
+
+  /* Flying cash from the runner */
+  .chase-cash {
+    position: absolute;
+    font-size: 20px;
+    z-index: 9;
+    animation: cashFly 1.5s linear infinite;
+  }
+  .chase-cash:nth-child(1) { bottom: 100px; left: 26%; animation-delay: 0s; }
+  .chase-cash:nth-child(2) { bottom: 110px; left: 24%; animation-delay: 0.3s; }
+  .chase-cash:nth-child(3) { bottom: 95px;  left: 22%; animation-delay: 0.6s; }
+  .chase-cash:nth-child(4) { bottom: 115px; left: 28%; animation-delay: 0.9s; }
+  .chase-cash:nth-child(5) { bottom: 105px; left: 20%; animation-delay: 1.2s; }
+
+  @keyframes cashFly {
+    0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    50%  { transform: translate(-60px, -30px) rotate(180deg); opacity: 0.8; }
+    100% { transform: translate(-120px, 20px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Police car */
+  .chase-police {
+    position: absolute;
+    bottom: 68px;
+    left: 60%;
+    font-size: 52px;
+    z-index: 10;
+    animation: policeBounce 0.25s ease-in-out infinite alternate;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  }
+  @keyframes policeBounce {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-6px); }
+  }
+
+  /* Siren lights - red and blue flashing */
+  .chase-siren {
+    position: absolute;
+    bottom: 130px;
+    left: 63%;
+    width: 30px;
+    height: 12px;
+    z-index: 11;
+    animation: policeBounce 0.25s ease-in-out infinite alternate;
+  }
+  .siren-red, .siren-blue {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    top: 0;
+  }
+  .siren-red {
+    left: 0;
+    background: #ff4444;
+    box-shadow: 0 0 20px #ff4444, 0 0 40px #ff4444;
+    animation: sirenFlashRed 0.3s infinite alternate;
+  }
+  .siren-blue {
+    right: 0;
+    background: #4444ff;
+    box-shadow: 0 0 20px #4444ff, 0 0 40px #4444ff;
+    animation: sirenFlashBlue 0.3s infinite alternate;
+  }
+  @keyframes sirenFlashRed {
+    0%   { opacity: 1; box-shadow: 0 0 20px #ff4444, 0 0 60px #ff4444; }
+    100% { opacity: 0.2; box-shadow: 0 0 5px #ff4444; }
+  }
+  @keyframes sirenFlashBlue {
+    0%   { opacity: 0.2; box-shadow: 0 0 5px #4444ff; }
+    100% { opacity: 1; box-shadow: 0 0 20px #4444ff, 0 0 60px #4444ff; }
+  }
+
+  /* Dust clouds behind police car */
+  .chase-dust {
+    position: absolute;
+    bottom: 78px;
+    font-size: 24px;
+    z-index: 8;
+    opacity: 0.4;
+    animation: dustPuff 1s ease-out infinite;
+  }
+  .chase-dust:nth-child(1) { left: 72%; animation-delay: 0s; }
+  .chase-dust:nth-child(2) { left: 76%; animation-delay: 0.3s; }
+  .chase-dust:nth-child(3) { left: 80%; animation-delay: 0.6s; }
+
+  @keyframes dustPuff {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    100% { transform: translate(40px, -10px) scale(1.5); opacity: 0; }
+  }
+
+  /* Full-width red/blue flash on the whole overlay */
+  .chase-overlay.active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    animation: ambientSiren 0.6s infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes ambientSiren {
+    0%   { background: rgba(255, 0, 0, 0.04); }
+    100% { background: rgba(0, 0, 255, 0.04); }
+  }
+
+  .chase-dismiss {
+    margin-top: 24px;
+    z-index: 2;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .chase-dismiss:hover { color: var(--text); }
+
+  /* Big criminal message */
+  .chase-criminal-msg {
+    font-size: 52px;
+    font-weight: 900;
+    text-align: center;
+    z-index: 10;
+    padding: 0 20px;
+    line-height: 1.1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #ff4444, #fdcb6e, #ff4444, #fdcb6e);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: criminalGlow 1s ease-in-out infinite alternate, criminalGradient 2s linear infinite;
+    text-shadow: none;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  .chase-criminal-msg.show {
+    animation: criminalEntry 0.6s ease-out forwards, criminalGradient 2s linear infinite;
+  }
+  @keyframes criminalEntry {
+    0%   { opacity: 0; transform: scale(0.3) rotate(-5deg); }
+    60%  { opacity: 1; transform: scale(1.15) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes criminalGradient {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+  @keyframes criminalGlow {
+    0%   { filter: drop-shadow(0 0 10px rgba(255, 68, 68, 0.8)); }
+    100% { filter: drop-shadow(0 0 30px rgba(253, 203, 110, 0.8)); }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">
-    <div class="logo-icon">V</div>
-    VB Pay
+    <div class="logo-icon">M</div>
+    Money Laundry
   </div>
   <div class="header-right">
     <span class="badge">Testnet</span>
@@ -701,6 +1172,100 @@
   </div>
 </main>
 
+<!-- Laundry Machine Overlay -->
+<div class="laundry-overlay" id="laundryOverlay">
+  <div class="laundry-scene">
+    <div class="laundry-label" id="laundryLabel">
+      Converting <strong id="laundryFrom">USD</strong> to <strong id="laundryTo">USDC</strong>
+      <span class="sub" id="laundrySub">Spinning up the money machine...</span>
+    </div>
+
+    <div class="machine running" id="laundryMachine">
+      <div class="machine-top">
+        <div class="machine-knob"></div>
+        <div class="machine-leds">
+          <div class="machine-led"></div>
+          <div class="machine-led"></div>
+          <div class="machine-led"></div>
+        </div>
+      </div>
+
+      <div class="machine-drum-wrapper">
+        <div class="machine-drum" id="laundryDrum">
+          <div class="drum-item" id="di1">$</div>
+          <div class="drum-item" id="di2">$</div>
+          <div class="drum-item" id="di3">$</div>
+          <div class="drum-item" id="di4">$</div>
+        </div>
+        <div class="drum-water"></div>
+        <div class="drum-bubbles">
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+        </div>
+      </div>
+
+      <div class="machine-feet">
+        <div class="machine-foot"></div>
+        <div class="machine-foot"></div>
+      </div>
+    </div>
+
+    <div class="laundry-input">
+      <span class="currency-in" id="laundryInSymbol">$$$</span>
+      <span>&rarr; IN</span>
+    </div>
+    <div class="laundry-output">
+      <span>OUT &rarr;</span>
+      <span class="currency-out" id="laundryOutSymbol">USDC</span>
+    </div>
+
+    <div class="laundry-progress">
+      <div class="laundry-progress-bar" id="laundryProgressBar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Police Chase Overlay -->
+<div class="chase-overlay" id="chaseOverlay">
+  <div class="chase-criminal-msg" id="chaseCriminalMsg">CONGRATULATIONS YOU ARE A CRIMINAL!</div>
+  <div class="chase-title">TRANSACTION COMPLETE - MONEY ON THE MOVE!</div>
+  <div class="chase-subtitle">Your funds are being escorted to the destination...</div>
+
+  <div class="chase-scene">
+    <!-- Skyline -->
+    <div class="chase-skyline" id="chaseSkyline"></div>
+
+    <!-- Flying cash -->
+    <div class="chase-cash">💵</div>
+    <div class="chase-cash">💴</div>
+    <div class="chase-cash">💸</div>
+    <div class="chase-cash">💵</div>
+    <div class="chase-cash">💴</div>
+
+    <!-- Runner with money bag -->
+    <div class="chase-runner">🏃‍♂️💰</div>
+
+    <!-- Police car with siren -->
+    <div class="chase-siren">
+      <div class="siren-red"></div>
+      <div class="siren-blue"></div>
+    </div>
+    <div class="chase-police">🚔</div>
+
+    <!-- Dust clouds -->
+    <div class="chase-dust">💨</div>
+    <div class="chase-dust">💨</div>
+    <div class="chase-dust">💨</div>
+
+    <!-- Road -->
+    <div class="chase-road"></div>
+  </div>
+
+  <div class="chase-dismiss" id="chaseDismiss">Click anywhere to dismiss</div>
+</div>
+
 <script>
 const RATE = 149.82;
 const FEE_FLAT = 0.01;
@@ -788,6 +1353,53 @@ function populateStep4() {
   $('btn4back').style.display = '';
 }
 
+// Laundry machine animation
+function showLaundry(fromCurrency, toCurrency, fromSymbols, toSymbol, subText) {
+  return new Promise(resolve => {
+    $('laundryFrom').textContent = fromCurrency;
+    $('laundryTo').textContent = toCurrency;
+    $('laundrySub').textContent = subText;
+    $('laundryInSymbol').textContent = fromSymbols;
+    $('laundryOutSymbol').textContent = toSymbol;
+
+    // Set drum items to input currency symbols
+    const symbols = fromSymbols.split('');
+    for (let j = 1; j <= 4; j++) {
+      $('di' + j).textContent = symbols[j % symbols.length] || symbols[0];
+    }
+
+    $('laundryProgressBar').style.width = '0%';
+    $('laundryOverlay').classList.add('active');
+    $('laundryMachine').classList.add('running');
+
+    // Animate progress bar
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 2;
+      $('laundryProgressBar').style.width = progress + '%';
+
+      // Halfway through, morph the drum items to output currency
+      if (progress >= 50) {
+        const outChars = toSymbol.split('');
+        for (let j = 1; j <= 4; j++) {
+          $('di' + j).textContent = outChars[j % outChars.length] || outChars[0];
+        }
+      }
+
+      if (progress >= 100) {
+        clearInterval(progressInterval);
+        $('laundryMachine').classList.remove('running');
+
+        // Brief pause showing completed state
+        setTimeout(() => {
+          $('laundryOverlay').classList.remove('active');
+          resolve();
+        }, 500);
+      }
+    }, 60); // ~3 seconds total
+  });
+}
+
 function startProcessing() {
   $('confirmCard').style.display = 'none';
   $('processingCard').style.display = '';
@@ -795,36 +1407,93 @@ function startProcessing() {
   $('btn4back').style.display = 'none';
 
   const steps = ['ps1', 'ps2', 'ps3', 'ps4'];
-  let i = 0;
 
-  function nextProcStep() {
-    if (i > 0) {
-      $(steps[i - 1]).classList.remove('active');
-      $(steps[i - 1]).classList.add('done');
-      $(steps[i - 1]).querySelector('.proc-icon').innerHTML = '&#10003;';
-    }
-    if (i < steps.length) {
-      $(steps[i]).classList.add('active');
-      i++;
-      setTimeout(nextProcStep, 1200 + Math.random() * 800);
-    } else {
-      setTimeout(showSuccess, 600);
-    }
+  async function runProcessing() {
+    // Step 1: USD → USDC (show laundry)
+    $(steps[0]).classList.add('active');
+    await showLaundry('USD', 'USDC', '$$$', 'USDC', 'Converting your dollars to stablecoin...');
+    $(steps[0]).classList.remove('active');
+    $(steps[0]).classList.add('done');
+    $(steps[0]).querySelector('.proc-icon').innerHTML = '&#10003;';
+
+    // Step 2: On-chain settlement (brief wait, no laundry)
+    $(steps[1]).classList.add('active');
+    await new Promise(r => setTimeout(r, 1200));
+    $(steps[1]).classList.remove('active');
+    $(steps[1]).classList.add('done');
+    $(steps[1]).querySelector('.proc-icon').innerHTML = '&#10003;';
+
+    // Step 3: USDC → JPY (show laundry again!)
+    $(steps[2]).classList.add('active');
+    await showLaundry('USDC', 'JPY', 'USDC', '¥¥¥', 'Converting stablecoin to Japanese Yen...');
+    $(steps[2]).classList.remove('active');
+    $(steps[2]).classList.add('done');
+    $(steps[2]).querySelector('.proc-icon').innerHTML = '&#10003;';
+
+    // Step 4: Send to bank (brief wait)
+    $(steps[3]).classList.add('active');
+    await new Promise(r => setTimeout(r, 1400));
+    $(steps[3]).classList.remove('active');
+    $(steps[3]).classList.add('done');
+    $(steps[3]).querySelector('.proc-icon').innerHTML = '&#10003;';
+
+    setTimeout(showSuccess, 600);
   }
 
-  nextProcStep();
+  runProcessing();
 }
 
-function showSuccess() {
-  $('processingCard').style.display = 'none';
-  $('successCard').style.display = '';
+// Generate random skyline buildings
+function buildSkyline() {
+  const skyline = $('chaseSkyline');
+  skyline.innerHTML = '';
+  let x = 0;
+  // Fill double-width for seamless scroll
+  while (x < window.innerWidth * 2) {
+    const w = 20 + Math.random() * 40;
+    const h = 15 + Math.random() * 45;
+    const div = document.createElement('div');
+    div.className = 'skyline-building';
+    div.style.cssText = `left:${x}px;width:${w}px;height:${h}px;`;
+    // Random lit windows
+    const windowCount = Math.floor(Math.random() * 4) + 1;
+    for (let wi = 0; wi < windowCount; wi++) {
+      const win = document.createElement('div');
+      win.style.cssText = `position:absolute;width:4px;height:4px;background:${Math.random()>0.5?'#fdcb6e':'#636e85'};top:${4+Math.random()*(h-12)}px;left:${3+Math.random()*(w-10)}px;`;
+      div.appendChild(win);
+    }
+    skyline.appendChild(div);
+    x += w + 3 + Math.random() * 10;
+  }
+}
 
-  const usdc = usd - FEE_FLAT;
-  const jpy = Math.floor(usdc * (1 - FEE_PCT) * RATE);
-  $('txId').textContent = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...';
-  $('r_usd').textContent = '$' + usd.toFixed(2);
-  $('r_jpy').textContent = '\u00a5' + jpy.toLocaleString();
-  $('r_name').textContent = $('recipName').value;
+function showChaseAnimation() {
+  return new Promise(resolve => {
+    buildSkyline();
+    $('chaseCriminalMsg').classList.remove('show');
+    $('chaseOverlay').classList.add('active');
+
+    // Pop in the big message after a short delay
+    setTimeout(() => {
+      $('chaseCriminalMsg').classList.add('show');
+    }, 300);
+
+    // Auto-dismiss after 6 seconds or on click
+    let dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      $('chaseOverlay').classList.remove('active');
+      resolve();
+    }
+
+    $('chaseOverlay').addEventListener('click', dismiss, { once: true });
+    setTimeout(dismiss, 6000);
+  });
+}
+
+async function showSuccess() {
+  $('processingCard').style.display = 'none';
 
   // Mark step 4 as done
   $('sd4').classList.remove('active');
@@ -833,6 +1502,19 @@ function showSuccess() {
   $('slbl4').classList.remove('active');
   $('slbl4').classList.add('done');
   $('sl3').classList.add('done');
+
+  // Show the police chase first!
+  await showChaseAnimation();
+
+  // Then show the success receipt
+  $('successCard').style.display = '';
+
+  const usdc = usd - FEE_FLAT;
+  const jpy = Math.floor(usdc * (1 - FEE_PCT) * RATE);
+  $('txId').textContent = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...';
+  $('r_usd').textContent = '$' + usd.toFixed(2);
+  $('r_jpy').textContent = '\u00a5' + jpy.toLocaleString();
+  $('r_name').textContent = $('recipName').value;
 }
 </script>
 
