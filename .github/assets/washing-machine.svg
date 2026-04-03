@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+  <defs>
+    <style>
+      @keyframes drumSpin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes slosh {
+        0% { d: path("M30,115 Q55,105 80,115 Q105,125 130,115 L130,140 Q105,145 80,140 Q55,135 30,140 Z"); }
+        50% { d: path("M30,115 Q55,125 80,115 Q105,105 130,115 L130,140 Q105,135 80,140 Q55,145 30,140 Z"); }
+        100% { d: path("M30,115 Q55,105 80,115 Q105,125 130,115 L130,140 Q105,145 80,140 Q55,135 30,140 Z"); }
+      }
+      @keyframes bubble1 {
+        0% { transform: translate(0, 0); opacity: 0.7; }
+        100% { transform: translate(-3px, -25px); opacity: 0; }
+      }
+      @keyframes bubble2 {
+        0% { transform: translate(0, 0); opacity: 0.6; }
+        100% { transform: translate(4px, -30px); opacity: 0; }
+      }
+      @keyframes bubble3 {
+        0% { transform: translate(0, 0); opacity: 0.8; }
+        100% { transform: translate(-2px, -20px); opacity: 0; }
+      }
+      @keyframes tumble1 {
+        0%   { transform: rotate(0deg) translate(18px, 0) rotate(0deg); opacity: 0.85; }
+        25%  { transform: rotate(90deg) translate(18px, 0) rotate(-90deg); opacity: 1; }
+        50%  { transform: rotate(180deg) translate(18px, 0) rotate(-180deg); opacity: 0.7; }
+        75%  { transform: rotate(270deg) translate(18px, 0) rotate(-270deg); opacity: 0.95; }
+        100% { transform: rotate(360deg) translate(18px, 0) rotate(-360deg); opacity: 0.85; }
+      }
+      @keyframes tumble2 {
+        0%   { transform: rotate(120deg) translate(22px, 0) rotate(-120deg); opacity: 0.9; }
+        25%  { transform: rotate(210deg) translate(22px, 0) rotate(-210deg); opacity: 0.75; }
+        50%  { transform: rotate(300deg) translate(22px, 0) rotate(-300deg); opacity: 1; }
+        75%  { transform: rotate(30deg) translate(22px, 0) rotate(-30deg); opacity: 0.8; }
+        100% { transform: rotate(120deg) translate(22px, 0) rotate(-120deg); opacity: 0.9; }
+      }
+      @keyframes tumble3 {
+        0%   { transform: rotate(240deg) translate(15px, 0) rotate(-240deg); opacity: 0.8; }
+        25%  { transform: rotate(330deg) translate(15px, 0) rotate(-330deg); opacity: 1; }
+        50%  { transform: rotate(60deg) translate(15px, 0) rotate(-60deg); opacity: 0.7; }
+        75%  { transform: rotate(150deg) translate(15px, 0) rotate(-150deg); opacity: 0.9; }
+        100% { transform: rotate(240deg) translate(15px, 0) rotate(-240deg); opacity: 0.8; }
+      }
+      @keyframes ledBlink {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+      @keyframes vibrate {
+        0%   { transform: translate(0, 0); }
+        25%  { transform: translate(0.5px, -0.5px); }
+        50%  { transform: translate(-0.5px, 0.5px); }
+        75%  { transform: translate(0.5px, 0); }
+        100% { transform: translate(0, -0.5px); }
+      }
+      .machine-body {
+        animation: vibrate 0.15s linear infinite;
+      }
+      .drum-spin {
+        animation: drumSpin 3s linear infinite;
+        transform-origin: 80px 120px;
+      }
+      .water-path {
+        animation: slosh 2s ease-in-out infinite;
+      }
+      .bubble-1 { animation: bubble1 2.5s ease-in infinite; }
+      .bubble-2 { animation: bubble2 3s ease-in infinite 0.8s; }
+      .bubble-3 { animation: bubble3 2s ease-in infinite 1.5s; }
+      .money-1 { animation: tumble1 2.5s linear infinite; transform-origin: 80px 120px; }
+      .money-2 { animation: tumble2 3s linear infinite; transform-origin: 80px 120px; }
+      .money-3 { animation: tumble3 2.2s linear infinite; transform-origin: 80px 120px; }
+      .led-1 { animation: ledBlink 1.2s infinite alternate; }
+      .led-2 { animation: ledBlink 1.2s infinite alternate 0.4s; }
+      .led-3 { animation: ledBlink 1.2s infinite alternate 0.8s; }
+    </style>
+    <clipPath id="drumClip">
+      <circle cx="80" cy="120" r="42"/>
+    </clipPath>
+    <linearGradient id="machineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a3456"/>
+      <stop offset="100%" stop-color="#1e2844"/>
+    </linearGradient>
+    <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(108,92,231,0.15)"/>
+      <stop offset="100%" stop-color="rgba(108,92,231,0.35)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="100" cy="232" rx="70" ry="6" fill="rgba(0,0,0,0.2)"/>
+
+  <g class="machine-body">
+    <!-- Machine body -->
+    <rect x="20" y="30" width="160" height="190" rx="16" fill="url(#machineGrad)" stroke="#1e2a45" stroke-width="2"/>
+
+    <!-- Top panel -->
+    <rect x="20" y="30" width="160" height="40" rx="16" fill="#232d4a"/>
+    <rect x="20" y="55" width="160" height="15" fill="#232d4a"/>
+    <line x1="20" y1="70" x2="180" y2="70" stroke="#1e2a45" stroke-width="1"/>
+
+    <!-- Control knob -->
+    <circle cx="50" cy="52" r="10" fill="#6c5ce7" stroke="#a29bfe" stroke-width="2"/>
+    <circle cx="50" cy="52" r="4" fill="#a29bfe" opacity="0.5"/>
+
+    <!-- LED indicators -->
+    <circle cx="130" cy="52" r="4" fill="#00cec9" class="led-1"/>
+    <circle cx="142" cy="52" r="4" fill="#a29bfe" class="led-2"/>
+    <circle cx="154" cy="52" r="4" fill="#00cec9" class="led-3"/>
+
+    <!-- Drum outer ring -->
+    <circle cx="100" cy="140" r="50" fill="none" stroke="#3a4570" stroke-width="3"/>
+    <circle cx="100" cy="140" r="47" fill="#0a0e1a"/>
+
+    <!-- Drum contents (clipped to circle) -->
+    <g clip-path="url(#drumClip)" transform="translate(20, 20)">
+      <!-- Water -->
+      <path class="water-path" d="M30,115 Q55,105 80,115 Q105,125 130,115 L130,140 Q105,145 80,140 Q55,135 30,140 Z" fill="url(#waterGrad)"/>
+
+      <!-- Spinning drum fins -->
+      <g class="drum-spin">
+        <line x1="80" y1="78" x2="80" y2="162" stroke="white" stroke-width="0.5" opacity="0.08"/>
+        <line x1="38" y1="99" x2="122" y2="141" stroke="white" stroke-width="0.5" opacity="0.08"/>
+        <line x1="38" y1="141" x2="122" y2="99" stroke="white" stroke-width="0.5" opacity="0.08"/>
+      </g>
+
+      <!-- Tumbling money symbols -->
+      <text class="money-1" x="76" y="124" font-family="monospace" font-size="14" font-weight="bold" fill="#00cec9" opacity="0.8">$</text>
+      <text class="money-2" x="76" y="124" font-family="monospace" font-size="12" font-weight="bold" fill="#a29bfe" opacity="0.8">$</text>
+      <text class="money-3" x="76" y="124" font-family="monospace" font-size="16" font-weight="bold" fill="#00cec9" opacity="0.7">$</text>
+
+      <!-- Bubbles -->
+      <circle class="bubble-1" cx="65" cy="125" r="3" fill="rgba(162,155,254,0.4)" stroke="rgba(162,155,254,0.6)" stroke-width="0.5"/>
+      <circle class="bubble-2" cx="85" cy="130" r="2.5" fill="rgba(162,155,254,0.35)" stroke="rgba(162,155,254,0.5)" stroke-width="0.5"/>
+      <circle class="bubble-3" cx="95" cy="122" r="3.5" fill="rgba(162,155,254,0.3)" stroke="rgba(162,155,254,0.55)" stroke-width="0.5"/>
+    </g>
+
+    <!-- Drum glass reflection -->
+    <ellipse cx="90" cy="128" rx="18" ry="12" fill="white" opacity="0.03" transform="rotate(-20, 90, 128)"/>
+
+    <!-- Door handle -->
+    <rect x="140" y="135" width="8" height="3" rx="1.5" fill="#3a4570"/>
+
+    <!-- Machine feet -->
+    <rect x="35" y="218" width="20" height="6" rx="3" fill="#3a4570"/>
+    <rect x="145" y="218" width="20" height="6" rx="3" fill="#3a4570"/>
+
+    <!-- Brand label -->
+    <text x="100" y="205" font-family="system-ui, sans-serif" font-size="8" fill="#636e85" text-anchor="middle" letter-spacing="2">LAUNDRY</text>
+  </g>
+</svg>
