@@ -4,7 +4,7 @@
 
 # Laundry
 
-**AI-powered cross-border treasury optimizer that eliminates unnecessary FX conversions using stablecoin routing.**
+### Clean your cross-border payments. Save 70% on FX fees.
 
 [![Built with Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev)
@@ -13,9 +13,13 @@
 [![Crossmint](https://img.shields.io/badge/Crossmint-USDC-00C389)](https://crossmint.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> Companies lose 3–7% on every cross-border payment because money gets converted multiple times through banks and intermediaries. Laundry analyzes your entire payment batch, finds which conversions are unnecessary, and routes them through stablecoins — keeping transfers as close to 1:1 as possible.
+Laundry is an AI-powered treasury optimizer that analyzes batches of cross-border payments and routes them through stablecoins to eliminate unnecessary FX conversions. Load your invoices, let the AI find the cheapest path for each one, run a compliance check, and execute — all in one wash cycle. On a $207K batch, Laundry cuts payment costs by 75%.
 
 [Getting Started](#-getting-started) · [How It Works](#-how-it-works) · [Architecture](#-architecture) · [Demo](#-demo)
+
+### [Watch the Demo](https://www.loom.com/share/bee003d9f3be4788ba05724e7a8b6ea1)
+
+[![Laundry Demo](https://cdn.loom.com/sessions/thumbnails/bee003d9f3be4788ba05724e7a8b6ea1-with-play.gif)](https://www.loom.com/share/bee003d9f3be4788ba05724e7a8b6ea1)
 
 </div>
 
