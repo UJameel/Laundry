@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import DrumPorthole from '@/components/drum/DrumPorthole';
+import PoliceChase from '@/components/transitions/PoliceChase';
 import WaterTransition from '@/components/transitions/WaterTransition';
 import { useWaterTransition } from '@/hooks/useWaterTransition';
 import { useLaundryStore } from '@/hooks/useLaundryStore';
@@ -20,6 +21,9 @@ const RinsePage = () => {
   const { analysisResult, setTransferResult } = useLaundryStore();
   const [executing, setExecuting] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
+  const [showChase, setShowChase] = useState(false);
+
+  const dismissChase = useCallback(() => setShowChase(false), []);
 
   const totalLaundryCost = analysisResult?.batch_summary?.total_optimized_cost ?? 0;
   const totalSavings = analysisResult?.batch_summary?.total_savings ?? 0;
@@ -49,8 +53,13 @@ const RinsePage = () => {
       } catch (e) {
         console.error('Execute failed:', e);
       }
-      // Wait for animation to finish before showing complete
-      setTimeout(() => setExecuting(false), 3000);
+      // Wait for animation to finish, then show police chase, then complete
+      setTimeout(() => {
+        setShowChase(true);
+        setExecuting(false);
+        // Auto-dismiss after 4 seconds
+        setTimeout(() => setShowChase(false), 4000);
+      }, 3000);
     };
     callExecute();
 
@@ -63,6 +72,7 @@ const RinsePage = () => {
       statusColor={executing ? 'teal' : 'green'}
     >
       <WaterTransition isActive={isTransitioning} onComplete={handleTransitionComplete} />
+      <PoliceChase isActive={showChase} onDismiss={dismissChase} />
 
       <div className="flex flex-col items-center">
         <AnimatePresence mode="wait">

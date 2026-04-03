@@ -167,4 +167,151 @@
   .animate-water-fill {
     animation: water-fill 2s ease-out forwards;
   }
+
+  /* ===== Washing machine drum effects ===== */
+
+  @keyframes machineSlosh {
+    0%   { transform: translateX(-5px) skewX(-2deg); height: 45%; }
+    100% { transform: translateX(5px) skewX(2deg); height: 55%; }
+  }
+
+  @keyframes machineBubbleUp {
+    0%   { transform: translateY(0) scale(1); opacity: 0.7; }
+    100% { transform: translateY(-40px) scale(0.3); opacity: 0; }
+  }
+
+  .machine-water-slosh {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, hsla(239, 84%, 67%, 0.1) 0%, hsla(239, 84%, 67%, 0.25) 100%);
+    border-radius: 0 0 50% 50%;
+    animation: machineSlosh 1.5s ease-in-out infinite alternate;
+  }
+
+  .machine-bubble {
+    background: hsla(239, 84%, 75%, 0.35);
+    border: 1px solid hsla(239, 84%, 75%, 0.5);
+    animation: machineBubbleUp 2s ease-in infinite;
+  }
+
+  /* ===== Police chase overlay animations ===== */
+
+  @keyframes chaseRoadScroll {
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes chaseSkylineScroll {
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes chaseRunnerBounce {
+    0%   { transform: translateY(0) rotate(-2deg); }
+    100% { transform: translateY(-12px) rotate(2deg); }
+  }
+
+  @keyframes chasePoliceBounce {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-6px); }
+  }
+
+  @keyframes chaseCashFly {
+    0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    50%  { transform: translate(-60px, -30px) rotate(180deg); opacity: 0.8; }
+    100% { transform: translate(-120px, 20px) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes chaseSirenFlashRed {
+    0%   { opacity: 1; box-shadow: 0 0 20px #ff4444, 0 0 60px #ff4444; }
+    100% { opacity: 0.2; box-shadow: 0 0 5px #ff4444; }
+  }
+
+  @keyframes chaseSirenFlashBlue {
+    0%   { opacity: 0.2; box-shadow: 0 0 5px #4444ff; }
+    100% { opacity: 1; box-shadow: 0 0 20px #4444ff, 0 0 60px #4444ff; }
+  }
+
+  @keyframes chaseDustPuff {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    100% { transform: translate(40px, -10px) scale(1.5); opacity: 0; }
+  }
+
+  @keyframes chaseAmbientSiren {
+    0%   { background: rgba(255, 0, 0, 0.04); }
+    100% { background: rgba(0, 0, 255, 0.04); }
+  }
+
+  @keyframes chaseTitleFlash {
+    0%   { color: #ff7675; }
+    100% { color: #fdcb6e; }
+  }
+
+  @keyframes criminalEntry {
+    0%   { opacity: 0; transform: scale(0.3) rotate(-5deg); }
+    60%  { opacity: 1; transform: scale(1.15) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes criminalGradient {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  .chase-road-line {
+    animation: chaseRoadScroll 0.8s linear infinite;
+  }
+
+  .chase-skyline {
+    animation: chaseSkylineScroll 6s linear infinite;
+  }
+
+  .chase-runner {
+    animation: chaseRunnerBounce 0.35s ease-in-out infinite alternate;
+  }
+
+  .chase-police-car {
+    animation: chasePoliceBounce 0.25s ease-in-out infinite alternate;
+  }
+
+  .chase-cash-item {
+    animation: chaseCashFly 1.5s linear infinite;
+  }
+
+  .chase-siren-red {
+    animation: chaseSirenFlashRed 0.3s infinite alternate;
+  }
+
+  .chase-siren-blue {
+    animation: chaseSirenFlashBlue 0.3s infinite alternate;
+  }
+
+  .chase-dust-cloud {
+    animation: chaseDustPuff 1s ease-out infinite;
+  }
+
+  .chase-ambient-flash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    animation: chaseAmbientSiren 0.6s infinite alternate;
+    pointer-events: none;
+  }
+
+  .chase-criminal-text {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #ff4444, #fdcb6e, #ff4444, #fdcb6e);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: criminalEntry 0.6s ease-out forwards, criminalGradient 2s linear infinite;
+  }
 }

@@ -24,33 +24,33 @@ Team size:            3 (Usman, Tej, Taka)
 | # | Task | Est. | Depends On | Owner | Sponsor | Status |
 |---|------|------|------------|-------|---------|--------|
 | **SETUP (10:30 - 10:50)** |
-| 1 | Clone repo, confirm all API keys work | 10min | — | Usman | — | ○ |
-| 2 | Create Crossmint staging API key + 2 agent wallets (sender + recipient) | 10min | — | Taka | Crossmint | ○ |
-| 3 | Set up n8n Cloud Pro + create empty workflow with webhook trigger | 10min | — | Usman | n8n | ○ |
-| 4 | Open Lovable, start new project: "Treasury dashboard for cross-border payments" | 10min | — | Tej | Lovable | ○ |
-| 5 | Fund sender wallet with 1000 USDXM, test wallet-to-wallet transfer via curl | 15min | 2 | Taka | Crossmint | ○ |
+| 1 | Clone repo, confirm all API keys work | 10min | — | Usman | — | ✅ |
+| 2 | Create Crossmint staging API key + 2 agent wallets (sender + recipient) | 10min | — | Taka | Crossmint | ⚠️ API key exists, wallets NOT created |
+| 3 | Set up n8n Cloud Pro + create empty workflow with webhook trigger | 10min | — | Usman | n8n | ✅ |
+| 4 | Open Lovable, start new project: "Treasury dashboard for cross-border payments" | 10min | — | Tej | Lovable | ✅ |
+| 5 | Fund sender wallet with 1000 USDXM, test wallet-to-wallet transfer via curl | 15min | 2 | Taka | Crossmint | ❌ Blocked on wallet creation |
 | **PARALLEL BUILD (10:50 - 12:00) — 3 independent tracks** |
-| 6 | Lovable: Build invoice batch table (5 pre-loaded invoices with vendor, amount, currency, country) | 20min | 4 | Tej | Lovable | ○ |
-| 7 | Lovable: Build routing recommendation panel (side-by-side: traditional cost vs optimized cost per invoice) | 20min | 6 | Tej | Lovable | ○ |
-| 8 | Lovable: Build savings summary hero card (big number: "$5,530 saved" + percentage) | 10min | 7 | Tej | Lovable | ○ |
-| 9 | Lovable: Polish layout, colors, typography, branding | 20min | 8 | Tej | Lovable | ○ |
-| 10 | n8n: Build AI routing workflow — webhook receives invoice JSON → Claude AI Agent analyzes → returns routing recommendations JSON | 30min | 3 | Usman | n8n | ○ |
-| 11 | n8n: Add MiniMax TTS node — send summary text → get audio URL back | 15min | 10 | Usman | MiniMax | ○ |
-| 12 | n8n: Test routing workflow end-to-end (curl webhook, verify AI + TTS response) | 15min | 11 | Usman | n8n | ○ |
-| 13 | Build Crossmint transfer as n8n HTTP Request node (with Usman) | 20min | 5, 10 | Taka | Crossmint + n8n | ○ |
-| 14 | Test Crossmint node in n8n — verify USDC transfer executes from webhook call | 15min | 13 | Taka | Crossmint | ○ |
+| 6 | Lovable: Build invoice batch table (5 pre-loaded invoices with vendor, amount, currency, country) | 20min | 4 | Tej | Lovable | ✅ |
+| 7 | Lovable: Build routing recommendation panel (side-by-side: traditional cost vs optimized cost per invoice) | 20min | 6 | Tej | Lovable | ✅ |
+| 8 | Lovable: Build savings summary hero card (big number: "$5,530 saved" + percentage) | 10min | 7 | Tej | Lovable | ✅ |
+| 9 | Lovable: Polish layout, colors, typography, branding | 20min | 8 | Tej | Lovable | ✅ |
+| 10 | n8n: Build AI routing workflow — webhook receives invoice JSON → GPT-4o AI Agent analyzes → returns routing recommendations JSON | 30min | 3 | Usman | n8n | ✅ Using GPT-4o (Anthropic billing issue) |
+| 11 | n8n: Add MiniMax TTS node — send summary text → get audio URL back | 15min | 10 | Usman | MiniMax | ⚠️ Node exists but returns empty — needs credential config in n8n UI |
+| 12 | n8n: Test routing workflow end-to-end (curl webhook, verify AI + TTS response) | 15min | 11 | Usman | n8n | ✅ Analyze works, TTS untested |
+| 13 | Build Crossmint transfer as n8n HTTP Request node (with Usman) | 20min | 5, 10 | Taka | Crossmint + n8n | ⚠️ Node exists but returns empty — needs credential config + wallet locators |
+| 14 | Test Crossmint node in n8n — verify USDC transfer executes from webhook call | 15min | 13 | Taka | Crossmint | ❌ |
 | **LUNCH + CONNECT (12:00 - 12:30)** |
-| 15 | Eat lunch. Sketch integration plan: which buttons call which webhooks. Share all URLs. | 30min | — | All | — | ○ |
+| 15 | Eat lunch. Sketch integration plan: which buttons call which webhooks. Share all URLs. | 30min | — | All | — | ✅ |
 | **INTEGRATION (12:30 - 2:00)** |
-| 16 | Lovable: Add "Optimize" button → call n8n optimize webhook with invoice batch JSON | 15min | 9, 12 | Tej | Lovable + n8n | ○ |
-| 17 | Lovable: Display AI routing response — populate recommendation panel with n8n results | 20min | 16 | Tej | Lovable | ○ |
-| 18 | Lovable: Add "Execute Payment" button → calls n8n Crossmint transfer endpoint | 15min | 14, 17 | Tej + Taka | Lovable + Crossmint | ○ |
-| 19 | Lovable: Display transaction confirmation (tx hash, recipient balance, success) | 15min | 18 | Tej + Taka | Lovable + Crossmint | ○ |
-| 20 | Lovable: Add "Listen to Briefing" audio player for MiniMax TTS | 10min | 11, 17 | Tej | Lovable + MiniMax | ○ |
-| 21 | n8n: Test full flow end-to-end — optimize + transfer + TTS all in one | 20min | 14, 12 | Usman | All | ○ |
+| 16 | Lovable: Add "Optimize" button → call n8n optimize webhook with invoice batch JSON | 15min | 9, 12 | Tej | Lovable + n8n | ✅ Wired in WashCyclePage.tsx |
+| 17 | Lovable: Display AI routing response — populate recommendation panel with n8n results | 20min | 16 | Tej | Lovable | ✅ Real AI data displayed |
+| 18 | Lovable: Add "Execute Payment" button → calls n8n Crossmint transfer endpoint | 15min | 14, 17 | Tej + Taka | Lovable + Crossmint | ✅ Button wired, but execute endpoint returns empty |
+| 19 | Lovable: Display transaction confirmation (tx hash, recipient balance, success) | 15min | 18 | Tej + Taka | Lovable + Crossmint | ⚠️ UI exists with hardcoded tx hash — needs real Crossmint data |
+| 20 | Lovable: Add "Listen to Briefing" audio player for MiniMax TTS | 10min | 11, 17 | Tej | Lovable + MiniMax | ⚠️ Transcript display exists, audio player NOT wired (TTS endpoint broken) |
+| 21 | n8n: Test full flow end-to-end — optimize + transfer + TTS all in one | 20min | 14, 12 | Usman | All | ❌ Blocked on Crossmint + MiniMax |
 | 22 | Draft pitch script: problem → solution → demo flow → future vision | 20min | — | Taka | — | ○ |
 | **POLISH + TEST (2:00 - 3:00)** |
-| 23 | E2E smoke test: Optimize → recommendations → Execute → tx confirmation → voice | 15min | 19, 20, 21 | All | All | ○ |
+| 23 | E2E smoke test: Optimize → recommendations → Execute → tx confirmation → voice | 15min | 19, 20, 21 | All | All | ❌ |
 | 24 | UI polish: fix spacing, colors, loading states, error handling | 20min | 23 | Tej | Lovable | ○ |
 | 25 | Prepare fallback: if Crossmint flakes, hardcode tx response so demo doesn't break | 10min | 23 | Taka | — | ○ |
 | 26 | Fix bugs from smoke test | 20min | 23 | Usman | — | ○ |

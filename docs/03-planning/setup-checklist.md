@@ -10,60 +10,51 @@ valon-skill: setup-checklist
 ## Before the Hackathon (DO TONIGHT)
 
 ### Git & Repo
-- [x] GitHub repo created: https://github.com/UJameel/VB-HAC
-- [ ] Tej has push access (invite as collaborator)
-- [ ] 3rd member has push access (if joining)
-- [ ] Branch strategy: **main only** — keep it simple, commit often
-- [ ] .gitignore for Node/TypeScript added
+- [x] GitHub repo created: https://github.com/UJameel/Laundry
+- [x] Tej has push access
+- [x] Taka has push access
+- [x] Branch strategy: **main only** — keep it simple, commit often
+- [x] .gitignore for Node/TypeScript added
+- [x] Vercel linked to GitHub repo (auto-deploys on push)
 
 ### Sponsor Accounts & API Keys
 
 #### Lovable
-- [ ] Account created at https://lovable.dev
-- [ ] Apply discount code `COMM-BUILD-3890` in Settings → Plans & Credits
-- [ ] Verify Pro Plan 1 active (100 credits)
-- [ ] Smoke test: create a test project, generate a simple page, confirm it works
-- [ ] Connect GitHub integration (Settings → GitHub) — point to UJameel/VB-HAC
+- [x] Account created at https://lovable.dev
+- [x] Apply discount code `COMM-BUILD-3890` in Settings → Plans & Credits
+- [x] Verify Pro Plan 1 active (100 credits)
+- [x] Smoke test: create a test project, generate a simple page, confirm it works
+- [x] Connect GitHub integration — Tej built full frontend in Lovable, merged into main repo
 
 #### n8n
-- [ ] Account created at https://app.n8n.cloud
-- [ ] Apply voucher `2026-COMMUNITY-HACKATHON-SF-BFC634C3`
-- [ ] Verify Cloud Pro plan active
-- [ ] Smoke test: create a workflow with Webhook trigger → Respond to Webhook. Call the webhook URL with curl. Confirm you get a response.
-- [ ] Add Anthropic API key in Credentials (for Claude AI Agent node)
-- [ ] Note your webhook base URL: `https://your-instance.app.n8n.cloud/webhook/`
+- [x] Account created at https://app.n8n.cloud
+- [x] Apply voucher `2026-COMMUNITY-HACKATHON-SF-BFC634C3`
+- [x] Verify Cloud Pro plan active
+- [x] Smoke test: workflow created with 3 webhook flows (analyze, execute, briefing)
+- [x] Add OpenAI API key in Credentials (switched from Anthropic due to billing — using GPT-4o)
+- [x] Webhook base URL: `https://usmanjameel.app.n8n.cloud/webhook/`
+- [x] Workflow published and active (ID: 3ZQ1rUxmixxFHyRD)
+- [ ] Add Crossmint API key to execute HTTP Request node headers
+- [ ] Add MiniMax API key to briefing HTTP Request node headers
 
 #### Crossmint
-- [ ] Account created at https://staging.crossmint.com/console (STAGING — not production)
+- [x] Account created at https://staging.crossmint.com/console (STAGING — not production)
 - [ ] Redeem `HAC15` at https://www.crossmint.com/console (production credits)
-- [ ] Create server API key with scopes: `wallets.create`, `wallets.read`, `wallets:transactions.create`, `wallets:balance.read`, `wallets.fund`
-- [ ] Save API key as `CROSSMINT_API_KEY`
-- [ ] Smoke test: create a wallet via curl:
-  ```bash
-  curl --request POST \
-    --url https://staging.crossmint.com/api/2025-06-09/wallets \
-    --header 'Content-Type: application/json' \
-    --header 'X-API-KEY: YOUR_KEY' \
-    --data '{"type":"smart","chainType":"evm","config":{"adminSigner":{"type":"api-key"}}}'
-  ```
-- [ ] Create 2 wallets: "company-treasury" (sender) and "contractor-wallet" (recipient)
-- [ ] Fund sender wallet with 1000 USDXM (test stablecoin):
-  ```bash
-  curl --request POST \
-    --url "https://staging.crossmint.com/api/v1-alpha2/wallets/WALLET_LOCATOR/balances" \
-    --header 'X-API-KEY: YOUR_KEY' \
-    --header 'Content-Type: application/json' \
-    --data '{"amount": 1000, "currency": "usdxm"}'
-  ```
-- [ ] Save both wallet addresses/locators
+- [x] Create server API key with scopes: `wallets.create`, `wallets.read`, `wallets:transactions.create`, `wallets:balance.read`, `wallets.fund`
+- [x] Save API key as `CROSSMINT_API_KEY` (in .env and GitHub secrets)
+- [ ] **NOW: Create 2 wallets** — "company-treasury" (sender) and "contractor-wallet" (recipient)
+- [ ] **NOW: Fund sender wallet** with 1000 USDXM (test stablecoin)
+- [ ] **NOW: Test standalone transfer** via curl before wiring to n8n
+- [ ] Save both wallet addresses/locators and share with Usman
 
 #### MiniMax
-- [ ] Account created at https://platform.minimax.io
-- [ ] Group ID submitted via form: https://vrfi1sk8a0.feishu.cn/share/base/form/shrcnxDih8DF8BJhjWwgDKQTLug
-- [ ] $30 credits confirmed in balance: https://platform.minimax.io/user-center/payment/balance
-- [ ] API key obtained from platform
-- [ ] Save API key as `MINIMAX_API_KEY`
-- [ ] Note your API host (region-dependent — must match key)
+- [x] Account created at https://platform.minimax.io
+- [x] Group ID submitted via form
+- [x] $30 credits confirmed in balance
+- [x] API key obtained from platform
+- [x] Save API key as `MINIMAX_API_KEY` (in .env and GitHub secrets)
+- [ ] **NOW: Add MiniMax API key as Bearer token in n8n briefing HTTP Request node**
+- [ ] **NOW: Test TTS endpoint returns audio data**
 - [ ] Smoke test TTS:
   ```bash
   curl -X POST https://api.minimax.chat/v1/t2a_v2 \
@@ -72,10 +63,11 @@ valon-skill: setup-checklist
     -d '{"model":"speech-02-hd","text":"Treasury optimization complete. You saved fourteen thousand dollars."}'
   ```
 
-#### Claude API (for n8n AI Agent)
-- [ ] Anthropic API key ready (you likely have this already)
-- [ ] Save as `ANTHROPIC_API_KEY`
-- [ ] Verify key works + has sufficient credits for a day of hackathon usage
+#### Claude API / OpenAI API (for n8n AI Agent)
+- [x] Anthropic API key saved but **billing too low** — not usable
+- [x] Switched to OpenAI GPT-4o — key saved as `OPENAI_API_KEY`
+- [x] GPT-4o credential configured in n8n and tested working
+- [x] Analyze endpoint returns real AI route optimizations with structured output
 
 ### Communication
 - [ ] Join hackathon Discord: https://discord.gg/mVE5MyNf
