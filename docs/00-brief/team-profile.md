@@ -14,9 +14,9 @@ valon-skill: team-profile
 |--------|---------|-------|---------|--------|
 | **Usman** | Full-stack / AI-assisted dev | Claude Code, GSD framework, Lovable, n8n | Claude Code | Tech, AI tooling |
 | **Tej** | Full-stack + Design | Figma, Lovable, coding | Claude Code | Investment / trading, finance |
-| **TBD (3rd?)** | Unknown | Unknown | Unknown | Unknown |
+| **Taka** | Full-stack developer | Claude Code, AI-assisted dev | Claude Code | — |
 
-**Team size:** 2 (possibly 3)
+**Team size:** 3
 **Formation:** Forming at event — first time working together
 **Location:** Co-located (in-person at HAC)
 **Solo mode:** No
@@ -30,20 +30,20 @@ valon-skill: team-profile
 - **Full sponsor coverage.** Both comfortable with Lovable and n8n — can integrate all 4 sponsors
 - **Finance domain knowledge.** Tej brings investment/trading experience — can identify real pain points, not fake ones
 - **Design capability.** Tej on Figma means the UI/demo can be polished (critical — 25pts for demo quality)
-- **Versatile.** Both can code and use AI tools — no single-point-of-failure on any skill
+- **Versatile.** All three can code and use AI tools — no single-point-of-failure on any skill
+- **Three Claude Code users.** Massive velocity advantage over teams hand-coding.
 
 ## Gaps
 - **First-time team.** No established workflow. Need to align on communication + task split in first 15 min.
-- **Potential 3rd member unknown.** If someone joins at the event, need to onboard them fast.
 - **Crypto/blockchain experience unclear.** Crossmint abstracts most blockchain complexity, but if going deep on stablecoins, this could be a bottleneck.
 
 ## Recommended Role Split
 
 | Role | Owner | Focus |
 |------|-------|-------|
-| **Backend + AI orchestration** | Usman | Claude Code + GSD for n8n workflows, API integrations, MiniMax/Crossmint integration |
+| **Backend + AI orchestration** | Usman | Claude Code + GSD for n8n workflows, API integrations, MiniMax integration |
 | **Frontend + Demo** | Tej | Lovable for UI, Figma for polish, demo video prep, finance domain validation |
-| **3rd person (if joins)** | TBD | Pitch prep, demo scripting, additional feature, or research support |
+| **Crossmint + Integration** | Taka | Crossmint wallet/payment integration, frontend-backend connection, pitch support |
 
 ## Recommendations for Idea Selection
 - **Play to Tej's investment/trading domain.** Pick a problem in investing, markets, or research — he can validate whether the problem is real.
