@@ -15,11 +15,11 @@ created: 2026-04-03
 
 **[Screen: Load Page with 5 invoices visible]**
 
-> "Imagine you're a CFO. You have five international payments to make this month — Argentina, Germany, Nigeria, UK, Japan. Two hundred and seven thousand dollars going out the door.
+> "Imagine you're a CFO. You have 5 international payments to make this month — Argentina, Germany, Nigeria, UK, Japan. $207,000 going out the door.
 
 > Here's the problem: every one of those payments gets converted multiple times. Your bank takes a 2–6% FX spread, charges a $25–$75 wire fee, and routes it through intermediaries who each take their cut.
 
-> On this batch alone, that's over **seven thousand dollars lost** — not on the actual payment, but on the *routing*.
+> On this batch alone, that's over **$7,000 lost** — not on the actual payment, but on the *routing*.
 
 > What if an AI could look at all five payments together and find the cheapest path for each one?"
 
@@ -29,7 +29,7 @@ created: 2026-04-03
 
 **[Screen: Load Page — point at the invoice table]**
 
-> "This is Laundry. We load our invoices — five vendors, five currencies, five countries."
+> "This is Laundry. We load our invoices — 5 vendors, 5 currencies, 5 countries."
 
 **[Point at the amounts, flags, conversion routes]**
 
@@ -45,7 +45,7 @@ created: 2026-04-03
 
 **[Screen: Wash Page — washing machine animation spins, status messages cycle]**
 
-> "Our AI — GPT-4o, orchestrated through n8n — is analyzing all five payments right now. It's comparing the traditional bank route against a stablecoin route for each one."
+> "Our AI — GPT-4o, orchestrated through n8n — is analyzing all 5 payments right now. It's comparing the traditional bank route against a stablecoin route for each one."
 
 **[Wait for analysis to complete — route cards appear one by one]**
 
@@ -57,7 +57,7 @@ created: 2026-04-03
 
 **[Point at the summary card with the big savings number]**
 
-> "Total across the batch: traditional cost was over eight thousand dollars. Through Laundry: two thousand. **That's six thousand dollars saved** — roughly 75% of payment costs eliminated."
+> "Total across the batch: traditional cost was over $8,000. Through Laundry: $2,000. **That's $6,000 saved** — roughly 75% of payment costs eliminated."
 
 **[Click 'Proceed to Spin']**
 
@@ -113,7 +113,7 @@ created: 2026-04-03
 
 ## CLOSING — The Vision (2:40 – 3:00)
 
-> "To recap what you just saw: five invoices, five countries, analyzed by AI, compliance-checked, executed as stablecoin transfers, and summarized in a voice briefing. Four sponsor technologies — n8n for orchestration, GPT-4o for intelligence, MiniMax for compliance and voice, Crossmint for USDC execution.
+> "To recap what you just saw: 5 invoices, 5 countries, analyzed by AI, compliance-checked, executed as stablecoin transfers, and summarized in a voice briefing. 4 sponsor technologies — n8n for orchestration, GPT-4o for intelligence, MiniMax for compliance and voice, Crossmint for USDC execution.
 
 > With more time: flow netting to eliminate conversions entirely, live FX rates, off-ramp to local fiat, and invoice OCR. The platform gets smarter with every batch.
 
