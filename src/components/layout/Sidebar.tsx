@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Inbox, Settings, RotateCw, CheckCircle, Mic } from 'lucide-react';
+import { Wallet, Inbox, Settings, RotateCw, CheckCircle, Mic } from 'lucide-react';
 import WaterTransition from '@/components/transitions/WaterTransition';
 
 const navItems = [
+  { icon: Wallet, label: 'Wallets', path: '/wallets' },
   { icon: Inbox, label: 'Load', path: '/' },
   { icon: Settings, label: 'Wash Cycle', path: '/wash' },
   { icon: RotateCw, label: 'Spin', path: '/spin' },

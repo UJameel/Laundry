@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 
 const steps = [
+  { label: 'Wallets', path: '/wallets' },
   { label: 'Load', path: '/' },
   { label: 'Wash Cycle', path: '/wash' },
   { label: 'Spin', path: '/spin' },
