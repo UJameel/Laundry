@@ -269,9 +269,11 @@ Each flow uses the Webhook → Process → Respond to Webhook pattern.
 
 ## Team
 
-- **Usman** — Backend + AI orchestration (n8n, MiniMax)
-- **Tej** — Frontend + Design (Lovable, Figma)
-- **Taka** — Crossmint integration + Pitch + Animations
+| Name | GitHub | Role |
+|------|--------|------|
+| **Usman Jameel** | [@UJameel](https://github.com/UJameel) | Backend + AI orchestration (n8n, MiniMax) |
+| **Sritej Bommaraju** | [@SritejBommaraju](https://github.com/SritejBommaraju) | Frontend + Design (Lovable, Figma) |
+| **Taka Shirasu** | [@taka-shirasu](https://github.com/taka-shirasu) | Crossmint integration + Pitch + Animations |
 
 ---
 
