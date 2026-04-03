@@ -1,23 +1,82 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ShieldCheck, ShieldAlert, ShieldX, Loader2 } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import ConversionPipeline from '@/components/invoices/ConversionPipeline';
 import WaterTransition from '@/components/transitions/WaterTransition';
 import { useWaterTransition } from '@/hooks/useWaterTransition';
 import { useLaundryStore } from '@/hooks/useLaundryStore';
 import { invoices as defaultInvoices } from '@/data/invoices';
+import { checkCountryCompliance, ComplianceResult } from '@/lib/api';
+
+const riskIcon = (level: ComplianceResult['risk_level']) => {
+  if (level === 'blocked') return <ShieldX className="w-3.5 h-3.5 text-destructive" />;
+  if (level === 'high')    return <ShieldAlert className="w-3.5 h-3.5 text-warning" />;
+  if (level === 'medium')  return <ShieldAlert className="w-3.5 h-3.5 text-yellow-400" />;
+  return <ShieldCheck className="w-3.5 h-3.5 text-success" />;
+};
+
+const riskLabel: Record<ComplianceResult['risk_level'], string> = {
+  blocked: 'BLOCKED',
+  high:    'HIGH RISK',
+  medium:  'MEDIUM RISK',
+  low:     'COMPLIANT',
+};
+
+const riskColor: Record<ComplianceResult['risk_level'], string> = {
+  blocked: 'text-destructive',
+  high:    'text-warning',
+  medium:  'text-yellow-400',
+  low:     'text-success',
+};
 
 const SpinPage = () => {
   const { isTransitioning, navigateWithWater, handleTransitionComplete } = useWaterTransition();
   const { analysisResult } = useLaundryStore();
+
+  const [complianceResults, setComplianceResults] = useState<ComplianceResult[]>([]);
+  const [complianceLoading, setComplianceLoading] = useState(true);
+  const [complianceError, setComplianceError] = useState<string | null>(null);
 
   const routes = analysisResult?.routes ?? [];
   const summary = analysisResult?.batch_summary;
   const totalLaundryCost = summary?.total_optimized_cost ?? 0;
   const totalSavings = summary?.total_savings ?? 0;
 
+  // Run MiniMax compliance check for every destination country
+  useEffect(() => {
+    if (routes.length === 0) {
+      setComplianceLoading(false);
+      return;
+    }
+    const destinations = routes.map((r) => ({
+      country: r.country,
+      countryCode: defaultInvoices.find((d) => d.id === r.invoice_id)?.countryCode ?? '',
+      amount_usd: r.amount_usd,
+    }));
+    checkCountryCompliance(destinations)
+      .then(setComplianceResults)
+      .catch((e: unknown) => setComplianceError(e instanceof Error ? e.message : 'Compliance check failed'))
+      .finally(() => setComplianceLoading(false));
+  }, [routes.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const hasBlocked = complianceResults.some((r) => r.risk_level === 'blocked');
+  const hasHighRisk = complianceResults.some((r) => r.risk_level === 'high');
+  const complianceByCountry = Object.fromEntries(complianceResults.map((r) => [r.country, r]));
+
   return (
-    <AppLayout statusText="Pending execution — Review batch" statusColor="muted">
+    <AppLayout
+      statusText={
+        complianceLoading
+          ? 'Running MiniMax compliance check…'
+          : hasBlocked
+          ? 'Compliance blocked — transfer cannot proceed'
+          : hasHighRisk
+          ? 'High-risk destinations detected — review required'
+          : 'Compliance cleared — Ready to execute'
+      }
+      statusColor={complianceLoading ? 'muted' : hasBlocked ? 'red' : hasHighRisk ? 'yellow' : 'green'}
+    >
       <WaterTransition isActive={isTransitioning} onComplete={handleTransitionComplete} />
 
       <motion.div
@@ -52,9 +111,38 @@ const SpinPage = () => {
 
             <div className="border-t border-dashed border-border my-4" />
 
+            {/* MiniMax Compliance Check Header */}
+            <div className="flex items-center gap-2 mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              {complianceLoading ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  <span>MiniMax compliance scan running…</span>
+                </>
+              ) : complianceError ? (
+                <span className="text-yellow-400">Compliance check unavailable — manual review required</span>
+              ) : (
+                <>
+                  <ShieldCheck className="w-3 h-3 text-muted-foreground" />
+                  <span>MiniMax compliance scan complete</span>
+                </>
+              )}
+            </div>
+
+            {hasBlocked && (
+              <div className="mb-4 px-3 py-2 rounded-lg border border-destructive/40 bg-destructive/10 font-mono text-[11px] text-destructive">
+                One or more destinations are under active sanctions. Transfer blocked.
+              </div>
+            )}
+            {!hasBlocked && hasHighRisk && (
+              <div className="mb-4 px-3 py-2 rounded-lg border border-warning/40 bg-warning/10 font-mono text-[11px] text-warning">
+                High-risk destination detected. Enhanced due diligence required before proceeding.
+              </div>
+            )}
+
             <div className="space-y-4">
               {routes.map((route) => {
                 const inv = defaultInvoices.find((d) => d.id === route.invoice_id) ?? defaultInvoices[0];
+                const compliance = complianceByCountry[route.country];
                 return (
                   <motion.div
                     key={route.invoice_id}
@@ -65,10 +153,26 @@ const SpinPage = () => {
                     <div className="flex justify-between items-center font-mono text-[12px] mb-1.5">
                       <span className="text-foreground font-medium">{route.vendor}</span>
                       <div className="flex items-center gap-2">
+                        {compliance && !complianceLoading && (
+                          <div
+                            className={`flex items-center gap-1 ${riskColor[compliance.risk_level]}`}
+                            title={compliance.reason}
+                          >
+                            {riskIcon(compliance.risk_level)}
+                            <span className="text-[9px] font-semibold tracking-wider">
+                              {riskLabel[compliance.risk_level]}
+                            </span>
+                          </div>
+                        )}
                         <span className="text-foreground tabular-nums">${route.optimized_cost.toLocaleString()}</span>
                         <span className="text-[9px] text-teal font-semibold tracking-wider">USDC</span>
                       </div>
                     </div>
+                    {compliance && !complianceLoading && compliance.risk_level !== 'low' && (
+                      <p className={`font-mono text-[10px] mb-1.5 ${riskColor[compliance.risk_level]}`}>
+                        {compliance.reason}
+                      </p>
+                    )}
                     {inv && (
                       <ConversionPipeline
                         amountUSD={route.amount_usd}
@@ -106,13 +210,32 @@ const SpinPage = () => {
             Go Back
           </button>
           <motion.button
-            onClick={() => navigateWithWater('/rinse')}
-            className="flex-[2] py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm glow-blue flex items-center justify-center gap-2"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
+            onClick={() => !hasBlocked && !complianceLoading && navigateWithWater('/rinse')}
+            disabled={complianceLoading || hasBlocked}
+            className={`flex-[2] py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-opacity ${
+              complianceLoading || hasBlocked
+                ? 'bg-muted text-muted-foreground cursor-not-allowed opacity-50'
+                : 'bg-primary text-primary-foreground glow-blue'
+            }`}
+            whileHover={!complianceLoading && !hasBlocked ? { scale: 1.01 } : {}}
+            whileTap={!complianceLoading && !hasBlocked ? { scale: 0.98 } : {}}
           >
-            Execute Wash Run
-            <ArrowRight className="w-4 h-4" />
+            {complianceLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Checking compliance…
+              </>
+            ) : hasBlocked ? (
+              <>
+                <ShieldX className="w-4 h-4" />
+                Transfer Blocked
+              </>
+            ) : (
+              <>
+                Execute Wash Run
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </motion.button>
         </div>
       </motion.div>
