@@ -159,7 +159,7 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
               <button onClick={() => setExpanded((e) => !e)} className="p-1 rounded hover:bg-muted/30 text-muted-foreground transition-colors">
                 {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
-              {!wallet.isDemo && onRemove && (
+              {onRemove && (!wallet.isDemo || wallet.role === 'recipient') && (
                 <button onClick={onRemove} className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
                   <X className="w-3.5 h-3.5" />
                 </button>

@@ -24,6 +24,10 @@ export interface LaundryState {
   setBriefingAudio: (audio: Record<string, unknown>) => void;
   wallets: WalletEntry[];
   setWallets: (wallets: WalletEntry[]) => void;
+  activeSenderId: string | null;
+  setActiveSenderId: (id: string | null) => void;
+  excludedInvoiceIds: string[];
+  setExcludedInvoiceIds: (ids: string[]) => void;
   reset: () => void;
 }
 

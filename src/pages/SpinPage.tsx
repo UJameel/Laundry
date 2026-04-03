@@ -32,7 +32,10 @@ const riskColor: Record<ComplianceResult['risk_level'], string> = {
 
 const SpinPage = () => {
   const { isTransitioning, navigateWithWater, handleTransitionComplete } = useWaterTransition();
-  const { analysisResult } = useLaundryStore();
+  const { analysisResult, wallets, activeSenderId } = useLaundryStore();
+
+  const activeSender = wallets.find((w) => w.id === activeSenderId && w.role === 'sender')
+    ?? wallets.find((w) => w.role === 'sender');
 
   const [complianceResults, setComplianceResults] = useState<ComplianceResult[]>([]);
   const [complianceLoading, setComplianceLoading] = useState(true);
@@ -97,7 +100,7 @@ const SpinPage = () => {
               {[
                 ['Batch ID', `LND-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-001`],
                 ['Date', new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
-                ['Sender Wallet', 'crossmint:company-hq-wallet'],
+                ['Sender Wallet', activeSender?.id ?? 'crossmint:company-hq-wallet'],
                 ['Recipients', `${routes.length} vendor wallets`],
                 ['Total', `$${totalLaundryCost.toLocaleString()} (via USDC routing)`],
               ].map(([label, val]) => (

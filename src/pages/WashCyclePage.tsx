@@ -9,6 +9,7 @@ import { useWaterTransition } from '@/hooks/useWaterTransition';
 import { useLaundryStore } from '@/hooks/useLaundryStore';
 import { analyzeInvoices } from '@/lib/api';
 import { invoices as defaultInvoices } from '@/data/invoices';
+import { useMemo } from 'react';
 
 const statusMessages = [
   'Inspecting flows…',
@@ -30,7 +31,12 @@ const fxSpreadMap: Record<string, { spread: number; fee: number }> = {
 
 const WashCyclePage = () => {
   const { isTransitioning, navigateWithWater, handleTransitionComplete } = useWaterTransition();
-  const { setAnalysisResult, analysisResult } = useLaundryStore();
+  const { setAnalysisResult, analysisResult, excludedInvoiceIds } = useLaundryStore();
+
+  const activeInvoices = useMemo(
+    () => defaultInvoices.filter((inv) => !excludedInvoiceIds.includes(inv.id)),
+    [excludedInvoiceIds]
+  );
   const [analyzing, setAnalyzing] = useState(true);
   const [statusIndex, setStatusIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(0);
@@ -40,7 +46,7 @@ const WashCyclePage = () => {
     const callApi = async () => {
       try {
         const result = await analyzeInvoices({
-          invoices: defaultInvoices.map((inv) => ({
+          invoices: activeInvoices.map((inv) => ({
             id: inv.id,
             vendor: inv.vendor,
             country: inv.country,

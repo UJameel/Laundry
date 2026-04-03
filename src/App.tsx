@@ -28,14 +28,16 @@ const App = () => {
   const [transferResult, setTransferResult] = useState<Record<string, unknown> | null>(null);
   const [briefingAudio, setBriefingAudio] = useState<Record<string, unknown> | null>(null);
   const [wallets, setWallets] = useState<WalletEntry[]>(defaultWallets);
-  const reset = () => { setAnalysisResult(null); setTransferResult(null); setBriefingAudio(null); };
+  const [activeSenderId, setActiveSenderId] = useState<string | null>(SENDER_WALLET.id);
+  const [excludedInvoiceIds, setExcludedInvoiceIds] = useState<string[]>([]);
+  const reset = () => { setAnalysisResult(null); setTransferResult(null); setBriefingAudio(null); setExcludedInvoiceIds([]); };
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <LaundryContext.Provider value={{ analysisResult, setAnalysisResult, transferResult, setTransferResult, briefingAudio, setBriefingAudio, wallets, setWallets, reset }}>
+        <LaundryContext.Provider value={{ analysisResult, setAnalysisResult, transferResult, setTransferResult, briefingAudio, setBriefingAudio, wallets, setWallets, activeSenderId, setActiveSenderId, excludedInvoiceIds, setExcludedInvoiceIds, reset }}>
           <BrowserRouter>
             <Routes>
               <Route path="/wallets" element={<WalletPage />} />
