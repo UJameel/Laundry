@@ -12,11 +12,11 @@ import { invoices as defaultInvoices } from '@/data/invoices';
 import { useMemo } from 'react';
 
 const statusMessages = [
-  'Inspecting flows…',
-  'Calculating spreads…',
-  'Finding clean routes…',
-  'Consulting AI optimizer…',
-  'Almost done…',
+  'Inspecting flows...',
+  'Calculating spreads...',
+  'Finding clean routes...',
+  'Consulting AI optimizer...',
+  'Almost done...',
 ];
 
 const fxSpreadMap: Record<string, { spread: number; fee: number }> = {
@@ -105,11 +105,12 @@ const WashCyclePage = () => {
       <AnimatePresence>
         {analyzing && (
           <motion.div
-            className="flex flex-col items-center py-16"
+            className="flex flex-col items-center py-16 relative"
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DrumPorthole size={200} state="analyzing" className="mb-8" />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 40%, rgba(20, 184, 166, 0.06) 0%, transparent 60%)' }} />
+            <DrumPorthole size={200} state="analyzing" className="mb-8 relative z-10" />
             <motion.p
               className="text-base text-teal font-medium"
               key={statusIndex}
@@ -130,7 +131,7 @@ const WashCyclePage = () => {
       {!analyzing && analysisResult && (
         <div className="space-y-3">
           <motion.h2
-            className="text-xl font-bold text-foreground mb-5 font-display tracking-tight"
+            className="text-xl font-bold text-foreground mb-5 font-display tracking-[-0.02em]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
@@ -143,7 +144,7 @@ const WashCyclePage = () => {
               <AnimatePresence key={route.invoice_id}>
                 {i < visibleCards && (
                   <motion.div
-                    className="bg-card/70 border border-border rounded-xl p-5 backdrop-blur-sm hover:border-primary/20 transition-colors"
+                    className="glass-card rounded-xl p-5 hover-glow"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
@@ -153,7 +154,7 @@ const WashCyclePage = () => {
                         <h3 className="text-sm font-semibold text-foreground">{route.vendor}</h3>
                         <span className="text-[11px] text-muted-foreground">{inv?.flag} {inv?.currency} · ${route.amount_usd.toLocaleString()}</span>
                       </div>
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-teal/10 text-teal text-[10px] font-semibold uppercase tracking-wider border border-teal/15">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-teal/8 text-teal text-[10px] font-semibold uppercase tracking-wider border border-teal/12">
                         <Droplets className="w-3 h-3" />
                         {route.recommended_route === 'stablecoin' ? 'USDC Route' : 'Bank Route'}
                       </span>
@@ -175,15 +176,20 @@ const WashCyclePage = () => {
                     <div className="space-y-2 mb-3">
                       <div className="flex items-center gap-3">
                         <span className="text-[11px] text-muted-foreground w-28 shrink-0">Traditional Bank</span>
-                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-destructive/50 rounded-full" style={{ width: '100%' }} />
+                        <div className="flex-1 h-1.5 bg-muted/40 rounded-full overflow-hidden">
+                          <div className="h-full bg-destructive/40 rounded-full" style={{ width: '100%' }} />
                         </div>
                         <span className="text-[11px] font-mono text-destructive w-16 text-right tabular-nums">${route.traditional_cost.toLocaleString()}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-[11px] text-muted-foreground w-28 shrink-0">Laundry Route</span>
-                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-teal rounded-full" style={{ width: `${route.traditional_cost > 0 ? (route.optimized_cost / route.traditional_cost) * 100 : 0}%` }} />
+                        <div className="flex-1 h-1.5 bg-muted/40 rounded-full overflow-hidden">
+                          <motion.div
+                            className="h-full bg-teal rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${route.traditional_cost > 0 ? (route.optimized_cost / route.traditional_cost) * 100 : 0}%` }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                          />
                         </div>
                         <span className="text-[11px] font-mono text-teal w-16 text-right tabular-nums">${route.optimized_cost.toLocaleString()}</span>
                       </div>
@@ -192,10 +198,10 @@ const WashCyclePage = () => {
                     <div className="flex items-center gap-2">
                       <TrendingDown className="w-3.5 h-3.5 text-success" />
                       <span className="text-success font-bold text-sm">${route.savings.toLocaleString()} saved</span>
-                      <span className="text-[10px] text-success/60">({route.traditional_cost > 0 ? Math.round((route.savings / route.traditional_cost) * 100) : 0}% cleaner)</span>
+                      <span className="text-[10px] text-success/50">({route.traditional_cost > 0 ? Math.round((route.savings / route.traditional_cost) * 100) : 0}% cleaner)</span>
                     </div>
 
-                    <p className="text-[10px] text-muted-foreground mt-2 italic">{route.reasoning}</p>
+                    <p className="text-[10px] text-muted-foreground/60 mt-2 italic">{route.reasoning}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -205,7 +211,7 @@ const WashCyclePage = () => {
           <AnimatePresence>
             {allCardsVisible && (
               <motion.div
-                className="bg-card border border-border rounded-xl p-8 mt-4"
+                className="glass-card-elevated rounded-xl p-8 mt-4"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
@@ -225,12 +231,12 @@ const WashCyclePage = () => {
                 </div>
 
                 <div className="text-center mb-5">
-                  <CountUp target={totalSavings} className="text-5xl font-bold text-foreground tracking-tight font-display" />
+                  <CountUp target={totalSavings} className="text-5xl font-bold text-foreground tracking-[-0.03em] font-display" />
                   <p className="text-xs text-muted-foreground mt-1.5">scrubbed from your payment costs</p>
                 </div>
 
                 <div className="flex justify-center mb-5">
-                  <span className="px-3 py-1 rounded bg-success/10 text-success text-xs font-semibold border border-success/15">
+                  <span className="px-3 py-1 rounded-lg bg-success/8 text-success text-xs font-semibold border border-success/12">
                     {savingsPercent}% cleaner than your bank
                   </span>
                 </div>
@@ -240,7 +246,7 @@ const WashCyclePage = () => {
                     <span className="uppercase tracking-widest">Cleanliness level</span>
                     <span className="font-mono">{savingsPercent}%</span>
                   </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="h-2 bg-muted/30 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-teal to-success rounded-full"
                       initial={{ width: 0 }}
@@ -252,9 +258,9 @@ const WashCyclePage = () => {
 
                 <motion.button
                   onClick={() => navigateWithWater('/spin')}
-                  className="w-full mt-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm glow-blue flex items-center justify-center gap-2"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="w-full mt-6 py-3.5 rounded-xl btn-brand text-sm flex items-center justify-center gap-2"
+                  whileHover={{ scale: 1.005 }}
+                  whileTap={{ scale: 0.985 }}
                 >
                   Proceed to Spin
                   <ArrowRight className="w-4 h-4" />
