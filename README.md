@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src=".github/assets/washing-machine.svg" alt="Laundry" width="160" height="192"/>
+<img src=".github/assets/hero-screenshot.png" alt="Laundry — Clean Your Cross-Border Payments" width="960"/>
 
 # Laundry
 

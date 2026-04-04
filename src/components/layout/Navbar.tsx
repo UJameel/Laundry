@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Wallet, Globe, Menu, X } from 'lucide-react';
 import WaterTransition from '@/components/transitions/WaterTransition';
 
 const navItems = [
   { label: 'Wallets', path: '/wallets' },
-  { label: 'Load', path: '/' },
+  { label: 'Load', path: '/load' },
   { label: 'Wash', path: '/wash' },
   { label: 'Spin', path: '/spin' },
   { label: 'Rinse', path: '/rinse' },
@@ -54,33 +54,34 @@ const Navbar = ({ statusText = 'Idle', statusColor = 'muted' }: NavbarProps) => 
       <nav className="fixed top-0 left-0 right-0 z-50 h-16 glass">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 h-full flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <motion.div
-              className="relative flex items-center justify-center rounded-full shrink-0"
-              style={{
-                width: 32,
-                height: 32,
-                border: '2px solid rgba(20, 184, 166, 0.4)',
-                background: 'linear-gradient(135deg, #1E3A8A, #14B8A6)',
-                boxShadow: '0 2px 8px rgba(20, 184, 166, 0.25)',
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-            >
-              {[0, 60, 120].map((deg) => (
-                <div
-                  key={deg}
-                  className="absolute h-full w-[1px]"
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', transform: `rotate(${deg}deg)` }}
-                />
-              ))}
-              <div className="absolute inset-[3px] rounded-full border border-white/15" />
-              <div className="absolute w-1.5 h-1.5 rounded-full bg-white/50 top-1 left-1" />
-            </motion.div>
+          <Link to="/" className="flex items-center gap-3">
+            <div className="relative shrink-0" style={{ width: 32, height: 32 }}>
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center rounded-full"
+                style={{
+                  border: '2px solid #0d9488',
+                  background: 'linear-gradient(180deg, #14B8A6, #0d9488)',
+                  boxShadow: '0 2px 8px rgba(20, 184, 166, 0.25)',
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+              >
+                {[0, 60, 120].map((deg) => (
+                  <div
+                    key={deg}
+                    className="absolute h-full w-[1px]"
+                    style={{ background: 'rgba(255, 255, 255, 0.15)', transform: `rotate(${deg}deg)` }}
+                  />
+                ))}
+                <div className="absolute inset-[3px] rounded-full bg-white border border-white/30" />
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/50 top-1 left-1" />
+              </motion.div>
+              <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold font-mono text-[#14B8A6]/70 pointer-events-none">$</span>
+            </div>
             <span className="text-[15px] font-bold tracking-tight text-white font-display">
               Laundry
             </span>
-          </div>
+          </Link>
 
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">

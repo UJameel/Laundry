@@ -8,6 +8,7 @@ import { LaundryContext } from "@/hooks/useLaundryStore";
 import type { WalletEntry } from "@/hooks/useLaundryStore";
 import type { AnalyzeResponse } from "@/lib/api";
 import { SENDER_WALLET, RECIPIENT_WALLETS } from "@/lib/mockWallets";
+import LandingPage from "./pages/LandingPage";
 import LoadPage from "./pages/LoadPage";
 import WalletPage from "./pages/WalletPage";
 import WashCyclePage from "./pages/WashCyclePage";
@@ -41,7 +42,8 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/wallets" element={<WalletPage />} />
-              <Route path="/" element={<LoadPage />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/load" element={<LoadPage />} />
               <Route path="/wash" element={<WashCyclePage />} />
               <Route path="/spin" element={<SpinPage />} />
               <Route path="/rinse" element={<RinsePage />} />
