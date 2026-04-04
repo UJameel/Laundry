@@ -15,7 +15,7 @@
 
 Laundry is an AI-powered treasury optimizer that analyzes batches of cross-border payments and routes them through stablecoins to eliminate unnecessary FX conversions. Load your invoices, let the AI find the cheapest path for each one, run a compliance check, and execute — all in one wash cycle. On a $207K batch, Laundry cuts payment costs by 75%.
 
-[Getting Started](#-getting-started) · [How It Works](#-how-it-works) · [Architecture](#-architecture) · [Demo](#-demo)
+**[https://laundry-silk-pi.vercel.app](https://laundry-silk-pi.vercel.app)** · [Getting Started](#-getting-started) · [How It Works](#-how-it-works) · [Architecture](#-architecture) · [Demo](#-demo)
 
 ### [Watch the Demo](https://www.loom.com/share/bee003d9f3be4788ba05724e7a8b6ea1)
 
