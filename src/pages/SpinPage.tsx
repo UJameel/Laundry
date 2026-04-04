@@ -46,7 +46,6 @@ const SpinPage = () => {
   const totalLaundryCost = summary?.total_optimized_cost ?? 0;
   const totalSavings = summary?.total_savings ?? 0;
 
-  // Run MiniMax compliance check for every destination country
   useEffect(() => {
     if (routes.length === 0) {
       setComplianceLoading(false);
@@ -71,12 +70,12 @@ const SpinPage = () => {
     <AppLayout
       statusText={
         complianceLoading
-          ? 'Running MiniMax compliance check…'
+          ? 'Running MiniMax compliance check...'
           : hasBlocked
-          ? 'Compliance blocked — transfer cannot proceed'
+          ? 'Compliance blocked'
           : hasHighRisk
-          ? 'High-risk destinations detected — review required'
-          : 'Compliance cleared — Ready to execute'
+          ? 'High-risk destinations detected'
+          : 'Compliance cleared'
       }
       statusColor={complianceLoading ? 'muted' : hasBlocked ? 'red' : hasHighRisk ? 'yellow' : 'green'}
     >
@@ -87,16 +86,18 @@ const SpinPage = () => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <div className="h-3 bg-surface-raised" style={{
+        <div className="glass-card-elevated rounded-xl overflow-hidden" style={{ borderTop: '3px solid #1E3A8A' }}>
+          {/* Perforated top edge */}
+          <div className="h-3" style={{
+            background: 'linear-gradient(90deg, rgba(30, 58, 138, 0.06), rgba(20, 184, 166, 0.04))',
             clipPath: 'polygon(0 0, 100% 0, 100% 40%, 98% 100%, 96% 40%, 94% 100%, 92% 40%, 90% 100%, 88% 40%, 86% 100%, 84% 40%, 82% 100%, 80% 40%, 78% 100%, 76% 40%, 74% 100%, 72% 40%, 70% 100%, 68% 40%, 66% 100%, 64% 40%, 62% 100%, 60% 40%, 58% 100%, 56% 40%, 54% 100%, 52% 40%, 50% 100%, 48% 40%, 46% 100%, 44% 40%, 42% 100%, 40% 40%, 38% 100%, 36% 40%, 34% 100%, 32% 40%, 30% 100%, 28% 40%, 26% 100%, 24% 40%, 22% 100%, 20% 40%, 18% 100%, 16% 40%, 14% 100%, 12% 40%, 10% 100%, 8% 40%, 6% 100%, 4% 40%, 2% 100%, 0 40%)'
           }} />
 
           <div className="p-8">
-            <h2 className="text-base font-bold text-foreground mb-1 font-mono uppercase tracking-wider">Pending Laundry Run</h2>
-            <div className="h-px bg-border my-4" />
+            <h2 className="text-base font-bold mb-1 font-mono uppercase tracking-wider" style={{ color: '#0F172A' }}>Pending Laundry Run</h2>
+            <div className="my-4" style={{ height: '2px', background: 'linear-gradient(90deg, #1E3A8A, #14B8A6, transparent)' }} />
 
-            <div className="space-y-2.5 font-mono text-[12px]">
+            <div className="space-y-3 font-mono text-[12px]">
               {[
                 ['Batch ID', `LND-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-001`],
                 ['Date', new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
@@ -104,26 +105,28 @@ const SpinPage = () => {
                 ['Recipients', `${routes.length} vendor wallets`],
                 ['Total', `$${totalLaundryCost.toLocaleString()} (via USDC routing)`],
               ].map(([label, val]) => (
-                <div key={label} className="flex justify-between">
-                  <span className="text-muted-foreground">{label}</span>
+                <div key={label} className="flex justify-between py-1.5 border-b border-border/30 last:border-0">
+                  <span className="text-muted-foreground font-medium">{label}</span>
                   <span className={`text-foreground ${label === 'Total' ? 'text-teal font-semibold' : ''}`}>{val}</span>
                 </div>
               ))}
             </div>
 
-            <p className="text-[10px] text-muted-foreground/60 mt-4 mb-2 uppercase tracking-widest">{routes.length} payments queued</p>
+            <div className="mt-5 mb-4 px-4 py-3 rounded-lg" style={{ background: 'rgba(20, 184, 166, 0.05)', border: '1px solid rgba(20, 184, 166, 0.12)' }}>
+              <p className="text-[10px] text-teal font-semibold uppercase tracking-widest">{routes.length} payments queued</p>
+            </div>
 
-            <div className="border-t border-dashed border-border my-4" />
+            <div className="border-t border-dashed border-border/40 my-4" />
 
             {/* MiniMax Compliance Check Header */}
             <div className="flex items-center gap-2 mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               {complianceLoading ? (
                 <>
                   <Loader2 className="w-3 h-3 animate-spin" />
-                  <span>MiniMax compliance scan running…</span>
+                  <span>MiniMax compliance scan running...</span>
                 </>
               ) : complianceError ? (
-                <span className="text-yellow-400">Compliance check unavailable — manual review required</span>
+                <span className="text-yellow-400">Compliance check unavailable</span>
               ) : (
                 <>
                   <ShieldCheck className="w-3 h-3 text-muted-foreground" />
@@ -133,13 +136,13 @@ const SpinPage = () => {
             </div>
 
             {hasBlocked && (
-              <div className="mb-4 px-3 py-2 rounded-lg border border-destructive/40 bg-destructive/10 font-mono text-[11px] text-destructive">
+              <div className="mb-4 px-3 py-2 rounded-lg border border-destructive/30 bg-destructive/8 font-mono text-[11px] text-destructive">
                 One or more destinations are under active sanctions. Transfer blocked.
               </div>
             )}
             {!hasBlocked && hasHighRisk && (
-              <div className="mb-4 px-3 py-2 rounded-lg border border-warning/40 bg-warning/10 font-mono text-[11px] text-warning">
-                High-risk destination detected. Enhanced due diligence required before proceeding.
+              <div className="mb-4 px-3 py-2 rounded-lg border border-warning/30 bg-warning/8 font-mono text-[11px] text-warning">
+                High-risk destination detected. Enhanced due diligence required.
               </div>
             )}
 
@@ -178,8 +181,8 @@ const SpinPage = () => {
                       </p>
                     )}
                     {inv && (
-                      <p className="text-[10px] text-muted-foreground/60 font-mono mb-1.5">
-                        → crossmint:{inv.walletSlug}
+                      <p className="text-[10px] text-muted-foreground/50 font-mono mb-1.5">
+                        {'→'} crossmint:{inv.walletSlug}
                       </p>
                     )}
                     {inv && (
@@ -197,7 +200,7 @@ const SpinPage = () => {
               })}
             </div>
 
-            <div className="border-t border-dashed border-border my-4" />
+            <div className="border-t border-dashed border-border/40 my-4" />
 
             <div className="flex justify-between font-mono text-[12px]">
               <span className="text-muted-foreground">Savings confirmed</span>
@@ -205,7 +208,9 @@ const SpinPage = () => {
             </div>
           </div>
 
-          <div className="h-3 bg-surface-raised" style={{
+          {/* Perforated bottom edge */}
+          <div className="h-3" style={{
+            background: 'linear-gradient(90deg, rgba(30, 58, 138, 0.06), rgba(20, 184, 166, 0.04))',
             clipPath: 'polygon(0 100%, 100% 100%, 100% 60%, 98% 0, 96% 60%, 94% 0, 92% 60%, 90% 0, 88% 60%, 86% 0, 84% 60%, 82% 0, 80% 60%, 78% 0, 76% 60%, 74% 0, 72% 60%, 70% 0, 68% 60%, 66% 0, 64% 60%, 62% 0, 60% 60%, 58% 0, 56% 60%, 54% 0, 52% 60%, 50% 0, 48% 60%, 46% 0, 44% 60%, 42% 0, 40% 60%, 38% 0, 36% 60%, 34% 0, 32% 60%, 30% 0, 28% 60%, 26% 0, 24% 60%, 22% 0, 20% 60%, 18% 0, 16% 60%, 14% 0, 12% 60%, 10% 0, 8% 60%, 6% 0, 4% 60%, 2% 0, 0 60%)'
           }} />
         </div>
@@ -213,7 +218,7 @@ const SpinPage = () => {
         <div className="flex gap-3 mt-6">
           <button
             onClick={() => navigateWithWater('/wash')}
-            className="flex-1 py-3 rounded-xl border border-border text-muted-foreground font-medium hover:bg-muted/20 transition-colors flex items-center justify-center gap-2 text-sm"
+            className="flex-1 py-3 rounded-xl btn-ghost flex items-center justify-center gap-2 text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             Go Back
@@ -221,18 +226,18 @@ const SpinPage = () => {
           <motion.button
             onClick={() => !hasBlocked && !complianceLoading && navigateWithWater('/rinse')}
             disabled={complianceLoading || hasBlocked}
-            className={`flex-[2] py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-opacity ${
+            className={`flex-[2] py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 ${
               complianceLoading || hasBlocked
                 ? 'bg-muted text-muted-foreground cursor-not-allowed opacity-50'
-                : 'bg-primary text-primary-foreground glow-blue'
+                : 'btn-brand'
             }`}
-            whileHover={!complianceLoading && !hasBlocked ? { scale: 1.01 } : {}}
-            whileTap={!complianceLoading && !hasBlocked ? { scale: 0.98 } : {}}
+            whileHover={!complianceLoading && !hasBlocked ? { scale: 1.005 } : {}}
+            whileTap={!complianceLoading && !hasBlocked ? { scale: 0.985 } : {}}
           >
             {complianceLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Checking compliance…
+                Checking compliance...
               </>
             ) : hasBlocked ? (
               <>

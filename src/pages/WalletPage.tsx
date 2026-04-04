@@ -12,9 +12,6 @@ import { useLaundryStore } from '@/hooks/useLaundryStore';
 import type { WalletEntry } from '@/hooks/useLaundryStore';
 import { checkCountryCompliance } from '@/lib/api';
 
-// ---------------------------------------------------------------------------
-// Country list — name + ISO code + default currency
-// ---------------------------------------------------------------------------
 const COUNTRIES: { name: string; code: string; currency: string }[] = [
   { name: 'Argentina', code: 'AR', currency: 'ARS' },
   { name: 'Australia', code: 'AU', currency: 'AUD' },
@@ -65,35 +62,29 @@ const COUNTRIES: { name: string; code: string; currency: string }[] = [
 ];
 
 const FLAG_MAP: Record<string, string> = {
-  US: '🇺🇸', AR: '🇦🇷', DE: '🇩🇪', NG: '🇳🇬', GB: '🇬🇧', JP: '🇯🇵',
-  BR: '🇧🇷', MX: '🇲🇽', IN: '🇮🇳', SG: '🇸🇬', AE: '🇦🇪', FR: '🇫🇷',
-  AU: '🇦🇺', CA: '🇨🇦', CL: '🇨🇱', CN: '🇨🇳', CO: '🇨🇴', EG: '🇪🇬',
-  ET: '🇪🇹', GH: '🇬🇭', ID: '🇮🇩', IR: '🇮🇷', KE: '🇰🇪', KP: '🇰🇵',
-  KR: '🇰🇷', MA: '🇲🇦', MY: '🇲🇾', NL: '🇳🇱', PH: '🇵🇭', PK: '🇵🇰',
-  PL: '🇵🇱', RU: '🇷🇺', SA: '🇸🇦', SE: '🇸🇪', SN: '🇸🇳', ES: '🇪🇸',
-  CH: '🇨🇭', TH: '🇹🇭', TR: '🇹🇷', TZ: '🇹🇿', UA: '🇺🇦', UG: '🇺🇬',
-  VE: '🇻🇪', VN: '🇻🇳', ZA: '🇿🇦', ZW: '🇿🇼',
+  US: '\u{1F1FA}\u{1F1F8}', AR: '\u{1F1E6}\u{1F1F7}', DE: '\u{1F1E9}\u{1F1EA}', NG: '\u{1F1F3}\u{1F1EC}', GB: '\u{1F1EC}\u{1F1E7}', JP: '\u{1F1EF}\u{1F1F5}',
+  BR: '\u{1F1E7}\u{1F1F7}', MX: '\u{1F1F2}\u{1F1FD}', IN: '\u{1F1EE}\u{1F1F3}', SG: '\u{1F1F8}\u{1F1EC}', AE: '\u{1F1E6}\u{1F1EA}', FR: '\u{1F1EB}\u{1F1F7}',
+  AU: '\u{1F1E6}\u{1F1FA}', CA: '\u{1F1E8}\u{1F1E6}', CL: '\u{1F1E8}\u{1F1F1}', CN: '\u{1F1E8}\u{1F1F3}', CO: '\u{1F1E8}\u{1F1F4}', EG: '\u{1F1EA}\u{1F1EC}',
+  ET: '\u{1F1EA}\u{1F1F9}', GH: '\u{1F1EC}\u{1F1ED}', ID: '\u{1F1EE}\u{1F1E9}', IR: '\u{1F1EE}\u{1F1F7}', KE: '\u{1F1F0}\u{1F1EA}', KP: '\u{1F1F0}\u{1F1F5}',
+  KR: '\u{1F1F0}\u{1F1F7}', MA: '\u{1F1F2}\u{1F1E6}', MY: '\u{1F1F2}\u{1F1FE}', NL: '\u{1F1F3}\u{1F1F1}', PH: '\u{1F1F5}\u{1F1ED}', PK: '\u{1F1F5}\u{1F1F0}',
+  PL: '\u{1F1F5}\u{1F1F1}', RU: '\u{1F1F7}\u{1F1FA}', SA: '\u{1F1F8}\u{1F1E6}', SE: '\u{1F1F8}\u{1F1EA}', SN: '\u{1F1F8}\u{1F1F3}', ES: '\u{1F1EA}\u{1F1F8}',
+  CH: '\u{1F1E8}\u{1F1ED}', TH: '\u{1F1F9}\u{1F1ED}', TR: '\u{1F1F9}\u{1F1F7}', TZ: '\u{1F1F9}\u{1F1FF}', UA: '\u{1F1FA}\u{1F1E6}', UG: '\u{1F1FA}\u{1F1EC}',
+  VE: '\u{1F1FB}\u{1F1EA}', VN: '\u{1F1FB}\u{1F1F3}', ZA: '\u{1F1FF}\u{1F1E6}', ZW: '\u{1F1FF}\u{1F1FC}',
 };
 
-// ---------------------------------------------------------------------------
-// Compliance badge helpers
-// ---------------------------------------------------------------------------
 type RiskLevel = 'low' | 'medium' | 'high' | 'blocked';
 
 const riskBadge: Record<RiskLevel, { label: string; className: string; icon: React.ReactNode }> = {
-  low:     { label: 'Compliant',   className: 'bg-success/15 text-success',      icon: <ShieldCheck className="w-3 h-3" /> },
-  medium:  { label: 'Med Risk',    className: 'bg-yellow-400/15 text-yellow-400', icon: <ShieldAlert className="w-3 h-3" /> },
-  high:    { label: 'High Risk',   className: 'bg-warning/15 text-warning',       icon: <ShieldAlert className="w-3 h-3" /> },
-  blocked: { label: 'Blocked',     className: 'bg-destructive/15 text-destructive', icon: <ShieldX className="w-3 h-3" /> },
+  low:     { label: 'Compliant',   className: 'bg-success/10 text-success',        icon: <ShieldCheck className="w-3 h-3" /> },
+  medium:  { label: 'Med Risk',    className: 'bg-yellow-400/10 text-yellow-400',  icon: <ShieldAlert className="w-3 h-3" /> },
+  high:    { label: 'High Risk',   className: 'bg-warning/10 text-warning',        icon: <ShieldAlert className="w-3 h-3" /> },
+  blocked: { label: 'Blocked',     className: 'bg-destructive/10 text-destructive', icon: <ShieldX className="w-3 h-3" /> },
 };
 
-// ---------------------------------------------------------------------------
-// WalletCard
-// ---------------------------------------------------------------------------
 function truncateAddress(address: string): string {
   if (address.startsWith('crossmint:')) return address;
   if (address.length <= 18) return address;
-  return `${address.slice(0, 10)}…${address.slice(-6)}`;
+  return `${address.slice(0, 10)}...${address.slice(-6)}`;
 }
 
 interface WalletCardProps {
@@ -104,7 +95,7 @@ interface WalletCardProps {
 const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const isSender = wallet.role === 'sender';
-  const flag = FLAG_MAP[wallet.countryCode] ?? '🌐';
+  const flag = FLAG_MAP[wallet.countryCode] ?? '\u{1F310}';
   const risk = wallet.complianceRisk;
   const badge = risk ? riskBadge[risk] : null;
 
@@ -114,17 +105,22 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.97 }}
-      className={`relative rounded-xl border overflow-hidden ${
-        isSender ? 'border-primary/40 bg-primary/5' : 'border-border bg-card'
+      className={`relative rounded-xl overflow-hidden hover-glow ${
+        isSender ? 'glass-card-elevated' : 'glass-card'
       }`}
+      style={
+        isSender
+          ? { borderLeft: '4px solid #1E3A8A', background: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(20, 184, 166, 0.03) 100%)' }
+          : { borderLeft: '3px solid #14B8A6' }
+      }
     >
-      <div className={`h-1 w-full ${isSender ? 'bg-primary' : 'bg-teal/40'}`} />
+      <div className={`h-[3px] w-full ${isSender ? 'bg-gradient-to-r from-[#1E3A8A] to-[#14B8A6]' : 'bg-teal/20'}`} />
 
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-              isSender ? 'bg-primary/15 text-primary' : 'bg-teal/10 text-teal'
+              isSender ? 'bg-primary/12 text-primary' : 'bg-teal/8 text-teal'
             }`}>
               {isSender ? <Building2 className="w-4 h-4" /> : <User className="w-4 h-4" />}
             </div>
@@ -132,7 +128,7 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
               <div className="flex items-center gap-2 flex-wrap mb-0.5">
                 <span className="text-[13px] font-semibold text-foreground">{wallet.label}</span>
                 <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded ${
-                  wallet.isDemo ? 'bg-muted/60 text-muted-foreground' : 'bg-success/15 text-success'
+                  wallet.isDemo ? 'bg-muted/40 text-muted-foreground' : 'bg-success/10 text-success'
                 }`}>
                   {wallet.isDemo ? 'Demo' : 'Connected'}
                 </span>
@@ -156,7 +152,7 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
               <div className="text-[10px] text-muted-foreground capitalize">{wallet.role}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <button onClick={() => setExpanded((e) => !e)} className="p-1 rounded hover:bg-muted/30 text-muted-foreground transition-colors">
+              <button onClick={() => setExpanded((e) => !e)} className="p-1 rounded hover:bg-muted/20 text-muted-foreground transition-colors">
                 {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
               {onRemove && (!wallet.isDemo || wallet.role === 'recipient') && (
@@ -177,7 +173,7 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="mt-3 pt-3 border-t border-border/60 space-y-1.5 font-mono text-[11px]">
+              <div className="mt-3 pt-3 border-t border-border/40 space-y-1.5 font-mono text-[11px]">
                 {[
                   ['Wallet ID', wallet.id],
                   ['Full Address', wallet.address],
@@ -200,9 +196,6 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
   );
 };
 
-// ---------------------------------------------------------------------------
-// WalletPage
-// ---------------------------------------------------------------------------
 const emptyForm = {
   label: '',
   address: '',
@@ -245,7 +238,6 @@ const WalletPage = () => {
 
     const countryName = selectedCountry?.name ?? form.countryCode;
 
-    // Run MiniMax compliance check for recipient wallets
     let complianceRisk: WalletEntry['complianceRisk'] = undefined;
     let complianceReason: string | undefined = undefined;
 
@@ -255,21 +247,20 @@ const WalletPage = () => {
         const results = await checkCountryCompliance([{
           country: countryName,
           countryCode: form.countryCode,
-          amount_usd: 0, // wallet registration — no amount yet
+          amount_usd: 0,
         }]);
         const result = results[0];
         if (result) {
           complianceRisk = result.risk_level;
           complianceReason = result.reason;
           if (result.risk_level === 'blocked') {
-            setFormError(`Cannot add wallet — ${countryName} is under active sanctions (OFAC/UN/EU). Transfers are prohibited.`);
+            setFormError(`Cannot add wallet — ${countryName} is under active sanctions.`);
             setChecking(false);
             return;
           }
         }
       } catch {
-        // Compliance API unavailable — allow add but flag for manual review
-        complianceReason = 'Compliance check unavailable — manual review required before transfer.';
+        complianceReason = 'Compliance check unavailable — manual review required.';
       } finally {
         setChecking(false);
       }
@@ -295,53 +286,52 @@ const WalletPage = () => {
   };
 
   return (
-    <AppLayout statusText="Wallet setup — Select accounts" statusColor="muted">
+    <AppLayout statusText="Wallet setup" statusColor="muted">
       <WaterTransition isActive={isTransitioning} onComplete={handleTransitionComplete} />
 
       <motion.div className="max-w-2xl mx-auto" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(30, 58, 138, 0.08)' }}>
             <Wallet className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground font-display tracking-tight">Wallet Setup</h1>
+            <h1 className="text-xl font-bold text-foreground font-display tracking-[-0.02em]">Wallet Setup</h1>
             <p className="text-[12px] text-muted-foreground mt-0.5">Configure sender and recipient wallets before running a wash cycle.</p>
           </div>
         </div>
 
         {/* Flow note */}
-        <div className="mb-5 rounded-xl border border-border/60 bg-muted/20 p-4 space-y-2">
-          <div className="flex items-center gap-2 text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+        <div className="mb-5 glass-card rounded-xl p-4 space-y-2">
+          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: '#0F172A' }}>
             <Info className="w-3.5 h-3.5" />
             How the transfer works
           </div>
           <div className="flex items-center gap-2 font-mono text-[11px] text-foreground/80 flex-wrap">
-            <span className="px-2 py-1 rounded bg-primary/10 text-primary">Your USD</span>
+            <span className="px-2 py-1 rounded-lg bg-primary/8 text-primary border border-primary/10">Your USD</span>
             <ArrowRight className="w-3 h-3 text-muted-foreground" />
-            <span className="px-2 py-1 rounded bg-teal/10 text-teal">USDC on Base</span>
+            <span className="px-2 py-1 rounded-lg bg-teal/8 text-teal border border-teal/10">USDC on Base</span>
             <ArrowRight className="w-3 h-3 text-muted-foreground" />
-            <span className="px-2 py-1 rounded bg-surface-raised border border-border text-foreground">Recipient wallet overseas</span>
+            <span className="px-2 py-1 rounded-lg bg-muted/20 border border-border text-foreground">Recipient wallet</span>
           </div>
-          <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
-            Crossmint converts USD → USDC, which is then routed to recipient wallets on Base Testnet.
-            Recipients hold USDC — fiat offramp is not yet supported in this demo and will be added in a future phase.
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
+            Crossmint converts USD to USDC, which is routed to recipient wallets on Base Testnet.
             All destinations are screened by MiniMax AI for OFAC, FATF, and UN/EU sanctions compliance.
           </p>
         </div>
 
         {/* Demo notice */}
-        <div className="flex items-center gap-2 mb-6 px-3 py-2 rounded-lg border border-border/60 bg-muted/10">
+        <div className="flex items-center gap-2 mb-6 px-3 py-2 rounded-lg border border-border/40 bg-muted/5">
           <FlaskConical className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
           <p className="text-[11px] text-muted-foreground">
-            Demo wallets use mock balances on Base Testnet. Paste real Crossmint wallet addresses below to connect live accounts.
+            Demo wallets use mock balances on Base Testnet.
           </p>
         </div>
 
         {/* Sender wallets */}
         <div className="mb-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-3 pb-2" style={{ color: '#0F172A', borderBottom: '2px solid #14B8A6' }}>
             Sender — {senderWallets.length} wallet{senderWallets.length !== 1 ? 's' : ''}
           </p>
           <div className="space-y-3">
@@ -355,7 +345,7 @@ const WalletPage = () => {
 
         {/* Recipient wallets */}
         <div className="mb-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-3 pb-2" style={{ color: '#0F172A', borderBottom: '2px solid #14B8A6' }}>
             Recipients — {recipientWallets.length} wallet{recipientWallets.length !== 1 ? 's' : ''}
           </p>
           <div className="space-y-3">
@@ -371,7 +361,7 @@ const WalletPage = () => {
         <div className="mb-8">
           <button
             onClick={() => { setShowForm((s) => !s); setFormError(null); }}
-            className="flex items-center gap-2 text-[12px] font-medium text-muted-foreground hover:text-foreground border border-dashed border-border hover:border-primary/40 rounded-xl px-4 py-3 w-full justify-center transition-colors"
+            className="flex items-center gap-2 text-[12px] font-medium text-muted-foreground hover:text-foreground border border-dashed border-border/60 hover:border-primary/30 rounded-xl px-4 py-3 w-full justify-center transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add Wallet
@@ -386,10 +376,9 @@ const WalletPage = () => {
                 transition={{ duration: 0.25 }}
                 className="overflow-hidden"
               >
-                <div className="mt-3 rounded-xl border border-border bg-card p-5 space-y-4">
+                <div className="mt-3 glass-card rounded-xl p-5 space-y-4">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Connect Wallet</p>
 
-                  {/* Role toggle */}
                   <div className="flex gap-2">
                     {(['sender', 'recipient'] as const).map((role) => (
                       <button
@@ -406,7 +395,6 @@ const WalletPage = () => {
                     ))}
                   </div>
 
-                  {/* Label */}
                   <div>
                     <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1">Label</label>
                     <input
@@ -414,23 +402,21 @@ const WalletPage = () => {
                       placeholder="e.g. Vendor Berlin"
                       value={form.label}
                       onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))}
-                      className="w-full bg-surface-raised/50 border border-border rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 transition-colors"
+                      className="w-full bg-muted/15 border border-border/60 rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 transition-colors"
                     />
                   </div>
 
-                  {/* Wallet address */}
                   <div>
                     <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1">Wallet Address</label>
                     <input
                       type="text"
-                      placeholder="Paste 0x… or crossmint:… address"
+                      placeholder="Paste 0x... or crossmint:... address"
                       value={form.address}
                       onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
-                      className="w-full bg-surface-raised/50 border border-border rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 transition-colors"
+                      className="w-full bg-muted/15 border border-border/60 rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 transition-colors"
                     />
                   </div>
 
-                  {/* Country + Currency row */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1">
@@ -440,18 +426,18 @@ const WalletPage = () => {
                       <select
                         value={form.countryCode}
                         onChange={(e) => handleCountryChange(e.target.value)}
-                        className="w-full bg-surface-raised/50 border border-border rounded-lg px-3 py-2 text-[12px] text-foreground font-mono outline-none focus:border-primary/50 transition-colors"
+                        className="w-full bg-muted/15 border border-border/60 rounded-lg px-3 py-2 text-[12px] text-foreground font-mono outline-none focus:border-primary/40 transition-colors"
                       >
-                        <option value="">Select country…</option>
+                        <option value="">Select country...</option>
                         {COUNTRIES.map((c) => (
                           <option key={c.code} value={c.code}>
-                            {FLAG_MAP[c.code] ?? '🌐'} {c.name}
+                            {FLAG_MAP[c.code] ?? '\u{1F310}'} {c.name}
                           </option>
                         ))}
                       </select>
                       {form.role === 'recipient' && form.countryCode && (
-                        <p className="text-[10px] text-muted-foreground mt-1">
-                          MiniMax will screen this country for sanctions before adding.
+                        <p className="text-[10px] text-muted-foreground/60 mt-1">
+                          MiniMax will screen this country for sanctions.
                         </p>
                       )}
                     </div>
@@ -462,12 +448,11 @@ const WalletPage = () => {
                         placeholder="e.g. EUR"
                         value={form.currency}
                         onChange={(e) => setForm((f) => ({ ...f, currency: e.target.value.toUpperCase() }))}
-                        className="w-full bg-surface-raised/50 border border-border rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 transition-colors"
+                        className="w-full bg-muted/15 border border-border/60 rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 transition-colors"
                       />
                     </div>
                   </div>
 
-                  {/* Balance */}
                   <div>
                     <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1">Starting Balance (optional)</label>
                     <input
@@ -475,12 +460,12 @@ const WalletPage = () => {
                       placeholder="0"
                       value={form.balance}
                       onChange={(e) => setForm((f) => ({ ...f, balance: e.target.value }))}
-                      className="w-full bg-surface-raised/50 border border-border rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 transition-colors"
+                      className="w-full bg-muted/15 border border-border/60 rounded-lg px-3 py-2 text-[12px] text-foreground font-mono placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 transition-colors"
                     />
                   </div>
 
                   {formError && (
-                    <div className="flex items-start gap-2 px-3 py-2 rounded-lg border border-destructive/40 bg-destructive/10">
+                    <div className="flex items-start gap-2 px-3 py-2 rounded-lg border border-destructive/30 bg-destructive/8">
                       <ShieldX className="w-3.5 h-3.5 text-destructive shrink-0 mt-0.5" />
                       <p className="text-[11px] text-destructive font-mono">{formError}</p>
                     </div>
@@ -496,12 +481,12 @@ const WalletPage = () => {
                     <button
                       onClick={handleAddWallet}
                       disabled={checking}
-                      className="flex-[2] py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-semibold flex items-center justify-center gap-1.5 transition-colors hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="flex-[2] py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-semibold flex items-center justify-center gap-1.5 hover:brightness-110 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {checking ? (
                         <>
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          Checking compliance…
+                          Checking compliance...
                         </>
                       ) : (
                         <>
@@ -520,15 +505,15 @@ const WalletPage = () => {
         {/* Continue */}
         <motion.button
           onClick={() => navigateWithWater('/')}
-          className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm glow-blue flex items-center justify-center gap-2"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.98 }}
+          className="w-full py-3.5 rounded-xl btn-brand text-sm flex items-center justify-center gap-2"
+          whileHover={{ scale: 1.005 }}
+          whileTap={{ scale: 0.985 }}
         >
           Continue to Load Invoices
           <ArrowRight className="w-4 h-4" />
         </motion.button>
 
-        <p className="text-[10px] text-muted-foreground/50 text-center mt-4 tracking-wide">
+        <p className="text-[10px] text-muted-foreground/40 text-center mt-4 tracking-wide">
           {wallets.length} wallet{wallets.length !== 1 ? 's' : ''} configured ·{' '}
           {senderWallets.length} sender · {recipientWallets.length} recipient{recipientWallets.length !== 1 ? 's' : ''}
         </p>

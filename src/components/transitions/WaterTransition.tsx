@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 interface WaterTransitionProps {
   isActive: boolean;
@@ -34,29 +34,29 @@ const WaterTransition = ({ isActive, onComplete }: WaterTransitionProps) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, delay: 0.5 }}
         >
-          {/* Main wave - sweeps right to left */}
+          {/* Main wave */}
           <motion.div
             className="absolute inset-y-0 w-[140%]"
             style={{
-              background: 'linear-gradient(90deg, hsla(217,91%,53%,0.85) 0%, hsla(187,94%,43%,0.7) 40%, hsla(187,94%,43%,0.3) 80%, transparent 100%)',
+              background: 'linear-gradient(90deg, rgba(30, 58, 138, 0.75) 0%, rgba(20, 184, 166, 0.6) 40%, rgba(20, 184, 166, 0.2) 80%, transparent 100%)',
             }}
             initial={{ x: '100%' }}
             animate={{ x: '-40%' }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           />
 
-          {/* Secondary wave layer for depth */}
+          {/* Secondary wave */}
           <motion.div
             className="absolute inset-y-0 w-[130%]"
             style={{
-              background: 'linear-gradient(90deg, hsla(222,47%,5%,0.95) 0%, hsla(217,91%,53%,0.5) 50%, transparent 100%)',
+              background: 'linear-gradient(90deg, rgba(30, 58, 138, 0.85) 0%, rgba(109, 165, 250, 0.4) 50%, transparent 100%)',
             }}
             initial={{ x: '110%' }}
             animate={{ x: '-30%' }}
             transition={{ duration: 0.85, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.05 }}
           />
 
-          {/* Wave edge SVG shape */}
+          {/* Wave edge */}
           <motion.div
             className="absolute inset-y-0 w-32"
             initial={{ x: 'calc(100vw + 128px)' }}
@@ -66,7 +66,7 @@ const WaterTransition = ({ isActive, onComplete }: WaterTransitionProps) => {
             <svg viewBox="0 0 100 800" preserveAspectRatio="none" className="h-full w-full">
               <path
                 d="M100,0 C60,100 90,200 50,300 C10,400 80,500 40,600 C0,700 70,750 100,800 L0,800 L0,0 Z"
-                fill="hsla(187,94%,43%,0.4)"
+                fill="rgba(20, 184, 166, 0.4)"
               />
             </svg>
           </motion.div>
@@ -80,8 +80,8 @@ const WaterTransition = ({ isActive, onComplete }: WaterTransitionProps) => {
                 width: bubble.size,
                 height: bubble.size,
                 top: `${bubble.y}%`,
-                background: 'radial-gradient(circle at 30% 30%, hsla(187,94%,80%,0.5), hsla(217,91%,53%,0.2))',
-                border: '1px solid hsla(187,94%,80%,0.3)',
+                background: 'radial-gradient(circle at 30% 30%, rgba(103, 232, 249, 0.5), rgba(30, 58, 138, 0.2))',
+                border: '1px solid rgba(103, 232, 249, 0.3)',
               }}
               initial={{ x: `${100 + bubble.x}vw`, scale: 0, opacity: 0 }}
               animate={{
@@ -98,13 +98,13 @@ const WaterTransition = ({ isActive, onComplete }: WaterTransitionProps) => {
             />
           ))}
 
-          {/* Foam/spray particles */}
+          {/* Foam particles */}
           {Array.from({ length: 8 }).map((_, i) => (
             <motion.div
               key={`foam-${i}`}
               className="absolute w-1 h-1 rounded-full"
               style={{
-                background: 'hsla(187,94%,90%,0.6)',
+                background: 'rgba(103, 232, 249, 0.6)',
                 top: `${15 + Math.random() * 70}%`,
               }}
               initial={{ x: '100vw' }}

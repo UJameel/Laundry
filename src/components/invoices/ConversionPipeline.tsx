@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 interface ConversionPipelineProps {
@@ -33,7 +32,7 @@ const ConversionPipeline = ({
   return (
     <div className="flex items-center gap-3">
       {/* USD */}
-      <div className="flex-1 bg-surface-raised/60 border border-border rounded-lg p-3 text-center">
+      <div className="flex-1 bg-muted/15 border border-border/40 rounded-lg p-3 text-center">
         <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground mb-1">USD</p>
         <p className="text-sm font-bold text-foreground font-mono tabular-nums">${amountUSD.toLocaleString()}</p>
       </div>
@@ -44,8 +43,8 @@ const ConversionPipeline = ({
       </div>
 
       {/* USDC */}
-      <div className="flex-1 bg-teal/5 border border-teal/15 rounded-lg p-3 text-center">
-        <p className="text-[9px] uppercase tracking-[0.12em] text-teal/70 mb-1">USDC</p>
+      <div className="flex-1 bg-teal/5 border border-teal/12 rounded-lg p-3 text-center">
+        <p className="text-[9px] uppercase tracking-[0.12em] text-teal/60 mb-1">USDC</p>
         <p className="text-sm font-bold text-teal font-mono tabular-nums">{amountUSDC.toLocaleString()}</p>
       </div>
 
@@ -55,8 +54,8 @@ const ConversionPipeline = ({
       </div>
 
       {/* Local currency */}
-      <div className="flex-1 bg-indigo/5 border border-indigo/15 rounded-lg p-3 text-center">
-        <p className="text-[9px] uppercase tracking-[0.12em] text-indigo/70 mb-1">{targetCurrency}</p>
+      <div className="flex-1 bg-indigo/5 border border-indigo/12 rounded-lg p-3 text-center">
+        <p className="text-[9px] uppercase tracking-[0.12em] text-indigo/60 mb-1">{targetCurrency}</p>
         <p className="text-sm font-bold text-indigo font-mono tabular-nums">{localAmount.toLocaleString()}</p>
       </div>
     </div>

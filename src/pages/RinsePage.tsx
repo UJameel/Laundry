@@ -29,11 +29,9 @@ const RinsePage = () => {
   const totalLaundryCost = analysisResult?.batch_summary?.total_optimized_cost ?? 0;
   const totalSavings = analysisResult?.batch_summary?.total_savings ?? 0;
 
-  // Call execute API and animate steps in parallel
   useEffect(() => {
     if (!executing) return;
 
-    // Animate steps
     const interval = setInterval(() => {
       setActiveStep((s) => {
         if (s >= subSteps.length - 1) {
@@ -44,7 +42,6 @@ const RinsePage = () => {
       });
     }, 700);
 
-    // Call API
     const callExecute = async () => {
       try {
         if (analysisResult?.routes) {
@@ -54,11 +51,9 @@ const RinsePage = () => {
       } catch (e) {
         console.error('Execute failed:', e);
       }
-      // Wait for animation to finish, then show police chase, then complete
       setTimeout(() => {
         setShowChase(true);
         setExecuting(false);
-        // Auto-dismiss after 4 seconds
         setTimeout(() => setShowChase(false), 4000);
       }, 3000);
     };
@@ -69,7 +64,7 @@ const RinsePage = () => {
 
   return (
     <AppLayout
-      statusText={executing ? 'Transferring USDC to 5 wallets…' : 'Wash complete'}
+      statusText={executing ? 'Transferring USDC...' : 'Wash complete'}
       statusColor={executing ? 'teal' : 'green'}
     >
       <WaterTransition isActive={isTransitioning} onComplete={handleTransitionComplete} />
@@ -80,19 +75,20 @@ const RinsePage = () => {
           {executing ? (
             <motion.div
               key="executing"
-              className="flex flex-col items-center py-8"
+              className="flex flex-col items-center py-8 relative"
               exit={{ opacity: 0, scale: 0.95 }}
             >
-              <DrumPorthole size={240} state="executing" className="mb-8" />
-              <p className="text-base text-teal font-medium mb-6">Transferring USDC to {analysisResult?.routes?.length ?? 5} wallets…</p>
+              <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 35%, rgba(20, 184, 166, 0.06) 0%, transparent 55%)' }} />
+              <DrumPorthole size={240} state="executing" className="mb-8 relative z-10" />
+              <p className="text-base text-teal font-medium mb-6">Transferring USDC to {analysisResult?.routes?.length ?? 5} wallets...</p>
               <div className="space-y-3">
                 {subSteps.map((step, i) => (
                   <div key={step} className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      i <= activeStep ? 'bg-teal scale-110' : 'bg-muted'
+                    <div className={`w-2 h-2 rounded-full transition-transform duration-300 ${
+                      i <= activeStep ? 'bg-teal scale-110' : 'bg-muted/50'
                     }`} />
                     <span className={`text-[13px] transition-colors ${
-                      i <= activeStep ? 'text-foreground' : 'text-muted-foreground'
+                      i <= activeStep ? 'text-foreground' : 'text-muted-foreground/50'
                     }`}>
                       {step}
                     </span>
@@ -116,14 +112,13 @@ const RinsePage = () => {
                 const remainingBalance = mockResult?.remaining_sender_balance;
 
                 return (
-                  <div className="bg-card border border-border rounded-xl p-8 w-full font-mono text-[12px]">
+                  <div className="glass-card-elevated rounded-xl p-8 w-full font-mono text-[12px]">
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 className="w-5 h-5 text-success" />
                       <h2 className="text-base font-bold text-foreground font-display">Wash Complete</h2>
                     </div>
-                    <div className="h-px bg-border mb-4" />
+                    <div className="mb-4" style={{ height: '2px', background: 'linear-gradient(90deg, #14B8A6, transparent)' }} />
 
-                    {/* Batch summary */}
                     <div className="space-y-2.5 mb-4">
                       {[
                         ['Network', 'Base (Testnet)'],
@@ -139,14 +134,13 @@ const RinsePage = () => {
                       ))}
                     </div>
 
-                    {/* Per-transfer receipts */}
                     {transfers.length > 0 && (
                       <>
-                        <div className="h-px bg-border mb-3" />
+                        <div className="h-px bg-border/60 mb-3" />
                         <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2">Transfer receipts</p>
                         <div className="space-y-3">
                           {transfers.map((tx) => (
-                            <div key={tx.tx_hash} className="rounded-lg border border-border/60 px-3 py-2.5 space-y-1.5">
+                            <div key={tx.tx_hash} className="rounded-lg border border-border/40 px-3 py-2.5 space-y-1.5 bg-muted/5">
                               <div className="flex justify-between items-center">
                                 <span className="text-foreground font-medium">{tx.vendor}</span>
                                 <span className="text-success font-semibold">CONFIRMED</span>
@@ -158,12 +152,12 @@ const RinsePage = () => {
                               <div className="flex justify-between text-muted-foreground">
                                 <span>Amount</span>
                                 <span className="text-foreground tabular-nums">
-                                  ${tx.amount_usdc.toLocaleString()} USDC → {tx.amount_local.toLocaleString()} {tx.currency}
+                                  ${tx.amount_usdc.toLocaleString()} USDC {'→'} {tx.amount_local.toLocaleString()} {tx.currency}
                                 </span>
                               </div>
                               <div className="flex justify-between text-muted-foreground">
                                 <span>Tx hash</span>
-                                <span className="text-foreground/60">{tx.tx_hash.slice(0, 10)}…{tx.tx_hash.slice(-6)}</span>
+                                <span className="text-foreground/60">{tx.tx_hash.slice(0, 10)}...{tx.tx_hash.slice(-6)}</span>
                               </div>
                             </div>
                           ))}
@@ -171,7 +165,7 @@ const RinsePage = () => {
                       </>
                     )}
 
-                    <div className="h-px bg-border my-4" />
+                    <div className="h-px bg-border/60 my-4" />
                     <div className="space-y-1.5">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Fees paid</span>
@@ -186,12 +180,11 @@ const RinsePage = () => {
                 );
               })()}
 
-
               <motion.button
                 onClick={() => navigateWithWater('/briefing')}
-                className="w-full mt-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm glow-blue flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
+                className="w-full mt-6 py-3.5 rounded-xl btn-brand text-sm flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.005 }}
+                whileTap={{ scale: 0.985 }}
               >
                 View Full Briefing
                 <ArrowRight className="w-4 h-4" />

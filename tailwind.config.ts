@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'system-ui', 'sans-serif'],
+        display: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -56,9 +56,12 @@ export default {
           DEFAULT: "hsl(var(--surface))",
           raised: "hsl(var(--surface-raised))",
         },
-        teal: "hsl(var(--accent-teal))",
-        indigo: "hsl(var(--accent-indigo))",
-        success: "hsl(var(--success))",
+        /* Brand colors mapped to semantic names */
+        teal: "hsl(var(--accent-teal))",         /* #14B8A6 */
+        indigo: "hsl(var(--accent-blue))",        /* #6DA5FA */
+        cyan: "hsl(var(--accent-cyan))",          /* #67E8F9 */
+        success: "hsl(var(--success))",            /* #14B8A6 */
+        warning: "hsl(var(--warning))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
