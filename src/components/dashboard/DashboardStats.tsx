@@ -15,7 +15,7 @@ interface StatCardProps {
 const StatCard = ({ icon: Icon, label, value, sub, accentColor, glowColor, borderColor, delay }: StatCardProps) => (
   <motion.div
     className="glass-card rounded-xl p-5 relative overflow-hidden group hover-glow"
-    style={{ borderLeft: `3px solid ${borderColor}` }}
+    style={{ borderLeft: `4px solid ${borderColor}` }}
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.35 }}

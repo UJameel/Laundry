@@ -108,9 +108,13 @@ const WalletCard = ({ wallet, onRemove }: WalletCardProps) => {
       className={`relative rounded-xl overflow-hidden hover-glow ${
         isSender ? 'glass-card-elevated' : 'glass-card'
       }`}
-      style={{ borderLeft: isSender ? '4px solid #1E3A8A' : '3px solid #14B8A6' }}
+      style={
+        isSender
+          ? { borderLeft: '4px solid #1E3A8A', background: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(20, 184, 166, 0.03) 100%)' }
+          : { borderLeft: '3px solid #14B8A6' }
+      }
     >
-      <div className={`h-0.5 w-full ${isSender ? 'bg-primary' : 'bg-teal/30'}`} />
+      <div className={`h-[3px] w-full ${isSender ? 'bg-gradient-to-r from-[#1E3A8A] to-[#14B8A6]' : 'bg-teal/20'}`} />
 
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
